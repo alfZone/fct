@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dados da Empresa</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: url('/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg') 
+                no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .logo-escola {
+            width: 150px;
+            display: block;
+            margin: 0 auto -20px auto;
+        }
+
+        .card {
+            max-width: 650px;
+            width: 100%;
+            border-radius: 18px;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.80);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            font-family: "Playfair Display", serif;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .table th {
+            width: 180px;
+            font-weight: 600;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="card">
+        
+        <!-- LOGO DA ESM MONSERRATE -->
+        <img src="/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg" class="logo-escola" alt="Logo ESM Monserrate">
+        
+        <h2>Ficha de Identificação da Empresa</h2>
+
+        <table class="table table-borderless align-middle">
+            <tbody>
+                <tr>
+                    <th>Curso</th>
+                    <td>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Curso</span>
+                            <input type="text" class="form-control" placeholder="Nome do Curso">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Bem-vindo(a)</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #e9f1ff;
+        }
+
+        .background {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .bg-img {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            filter: brightness(75%);
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo {
+            width: 340px;
+        }
+
+        .container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 40px 60px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            text-align: center;
+            width: 580px;
+        }
+
+        .container h1 {
+            color: #0d57cb;
+            font-size: 35px;
+        }
+
+        .container h2 {
+            margin-top: 10px;
+            color: #1e49d9;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container p {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 18px 55px;
+            background: #0156ff;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="background">
+        <img src="../templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg" class="bg-img">
+    </div>
+
+    <div class="header">
+        <img src="../templates/base/imagens/esm_174.png" class="logo">
+    </div>
+
+    <div class="container">
+        <h1>Bem-vindo(a),</h1>
+        <h2>NOME_DO_PROFESSOR</h2>
+       
+
+        <a class="btn" href="dc/distribuir">Distribuir Alunos</a>
+    </div>
+
+</body>
+</html>

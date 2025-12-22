@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ano Letivo</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background-image: url('imagens/Jose_Campos_to_Joao_Franco-11.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-size: 1.25rem;
+            animation: fadeInPage 1.2s ease-in-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .top-bar {
+            background: rgba(0, 60, 113, 0.85);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            font-size: 2rem;
+            backdrop-filter: blur(3px);
+        }
+
+        .top-bar img {
+            height: 130px !important;
+            margin-bottom: 20px;
+        }
+
+        .form-box {
+            background: rgba(255,255,255,0.90);
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.25);
+            padding: 50px;
+            animation: fadeInPage 1.3s ease-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn {
+            padding: 18px 35px !important;
+            font-size: 1.3rem !important;
+            border-radius: 12px !important;
+            transition: all 0.25s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            opacity: 0.95;
+        }
+
+        .footer {
+            background: rgba(0, 60, 113, 0.85);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 80px;
+            font-size: 1.2rem;
+            backdrop-filter: blur(3px);
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="top-bar">
+        <img src="imagens/esm_174.png" alt="Logo Escola">
+        <h2>Gestão do Ano Letivo</h2>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 form-box">
+
+                <!-- ID -->
+                <div class="input-group mb-4">
+                    <span class="input-group-text">ID</span>
+                    <input type="text" class="form-control" id="idAno" placeholder="Ex: 1">
+                </div>
+
+                <!-- Ano Letivo -->
+                <div class="input-group mb-4">
+                    <span class="input-group-text">Ano Letivo</span>
+                    <input type="text" class="form-control" id="anoLetivo" placeholder="Ex: 2024/2025">
+                </div>
+
+                <!-- Estado -->
+                <div class="input-group mb-4">
+                    <label class="input-group-text">Estado</label>
+                    <select class="form-select" id="estado">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="row mt-4 g-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-success w-100" id="btnGravar">Gravar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-secondary w-100" id="btnVoltar">Voltar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2025 Escola Esmonserrate. Todos os direitos reservados.
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('btnGravar').addEventListener('click', () => {
+            const id = document.getElementById('idAno').value;
+            const ano = document.getElementById('anoLetivo').value;
+            const estado = document.getElementById('estado').value;
+
+            if (!id || !ano) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            alert(`Ano Letivo gravado:\nID: ${id}\nAno: ${ano}\nEstado: ${estado}`);
+        });
+
+        document.getElementById('btnVoltar').addEventListener('click', () => {
+            window.location.href = 'emp.menu.html';
+        });
+    </script>
+
+</body>
+</html>

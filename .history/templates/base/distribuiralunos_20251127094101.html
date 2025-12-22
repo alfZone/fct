@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Distribuir Alunos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header, footer {
+            background-color: #f2f2f2;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        main { padding: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 5px 0; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<!-- Cabeçalho -->
+<header>
+    <img src="logo-escola.png" alt="Logo da Escola" style="height:50px;">
+    <p>Professora: Maria Silva</p>
+    <p>Bem-vindo(a)!</p>
+</header>
+
+<!-- Conteúdo principal -->
+<main>
+    <h1>Selecione os Alunos</h1>
+    <form id="formAlunos" action="processarDistribuicao.php" method="post">
+        <ul id="listaAlunos">
+            <!-- Alunos serão inseridos aqui pelo JS -->
+        </ul>
+        <button type="submit">Distribuir Selecionados</button>
+    </form>
+</main>
+
+<!-- Rodapé -->
+<footer>
+    &copy; 2025 Escola Exemplo. Todos os direitos reservados.
+</footer>
+
+<script>
+    // Substitua 'endpoint.php' pelo seu endpoint real que retorna JSON
+    fetch('endpoint.php')
+        .then(response => response.json())
+        .then(alunos => {
+            const lista = document.getElementById('listaAlunos');
+            alunos.forEach(aluno => {
+                const li = document.createElement('li');
+                li.innerHTML = `<input type="checkbox" name="alunos[]" value="${aluno.id}"> ${aluno.nome}`;
+                lista.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao buscar alunos:', error);
+            document.getElementById('listaAlunos').innerHTML = '<li>Erro ao carregar alunos.</li>';
+        });
+</script>
+
+</body>
+</html>

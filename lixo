@@ -1,0 +1,21 @@
+## classes Users and Authentication
+
+The two class Users and Authentication should be copy to your web site. The namespace and use path should also be redefine acording to your foldes.
+
+`namespace classes\db;`
+
+`use classes\db\LayerDB;`
+
+The User and Authentication classes may already exist in your project. Be careful if you decide to change them. Make a backup of that first.
+
+**a.** The Users class must have a mysql statement to display a list of valid users for the site
+
+"loginGoogle" => 'SELECT `id`, `email`, `name`, `type`  FROM `authUser` WHERE `email`=:email and active=1'
+
+If name isn't the name of the field for the user's name, mask it as name for better compatibility.
+
+for exemple:
+
+"loginGoogle" => 'SELECT id, nameOfUser as name FROM tableUsers WHERE block=0 order by nameOfUser '
+
+**b.** The Authentication class can be modified if you want to change the number of session variables.

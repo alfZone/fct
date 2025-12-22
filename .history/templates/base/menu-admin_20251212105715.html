@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Menu Administrador</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" />
+
+    <!-- Ícones (Bootstrap Icons) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+    <style>
+      body {
+        background: url("/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg") no-repeat center center fixed;
+        background-size: cover;
+        font-family: "Nunito", sans-serif;
+      }
+
+      header {
+        padding: 25px;
+        text-align: center;
+      }
+
+      #logo {
+        height: 120px;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
+      }
+
+      .menu-card {
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(18px);
+        padding: 40px;
+        border-radius: 22px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      .menu-title {
+        font-weight: 700;
+        font-size: 2.4rem;
+        color: white;
+        text-align: center;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        margin-bottom: 40px;
+      }
+
+      .menu-btn {
+        background: linear-gradient(45deg, #0066ff, #003d99);
+        border: none;
+        padding: 25px;
+        border-radius: 18px;
+        color: white;
+        text-align: center;
+        transition: 0.3s ease;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .menu-btn:hover {
+        background: linear-gradient(45deg, #1a7dff, #0044aa);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      .menu-btn i {
+        font-size: 42px;
+        display: block;
+        margin-bottom: 12px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img id="logo" src="/fct/templates/base/imagens/esm_174.png" alt="Logo da Escola" />
+    </header>
+
+    <div class="container mb-5">
+      <div class="menu-card mx-auto col-lg-8 col-md-10">
+        <h2 class="menu-title">MENU ADMINISTRADOR</h2>
+        <h3 class="menu-title">
+          Bem-vindo, <span id="name">NAME</span>
+          <img src="" alt="Foto de Perfil" id="photo" style="width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-left: 10px" />
+        </h3>
+
+        <div class="container">
+          <div class="row">
+            <!-- PROFESSORES -->
+            <div class="col-md-4">
+              <a href="professores" class="menu-btn d-block bg-info">
+                <i class="bi bi-person-badge-fill"></i>
+                Professor
+              </a>
+            </div>
+            <div class="col-md-4">
+              <a href="cursos" class="menu-btn d-block">
+                <i class="bi bi-journal-bookmark-fill"></i>
+                Diretor de Curso
+              </a>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <h7 class="menu-title">Gestão de Tabelas</h7>
+        <!-- GRID DE BOTÕES -->
+        <div class="row g-4">
+          <!-- ALUNOS -->
+          <div class="col-md-4">
+            <a href="alunos" class="menu-btn d-block">
+              <i class="bi bi-person-lines-fill"></i>
+              Alunos
+            </a>
+          </div>
+
+          <!-- ANO LETIVO -->
+          <div class="col-md-4">
+            <a href="anos-letivos" class="menu-btn d-block">
+              <i class="bi bi-calendar2-week"></i>
+              Ano Letivo
+            </a>
+          </div>
+
+          <!-- TURMAS -->
+          <div class="col-md-4">
+            <a href="turmas" class="menu-btn d-block">
+              <i class="bi bi-people-fill"></i>
+              Turmas
+            </a>
+          </div>
+
+          <!-- CURSOS -->
+          <div class="col-md-4">
+            <a href="cursos" class="menu-btn d-block">
+              <i class="bi bi-journal-bookmark-fill"></i>
+              Cursos
+            </a>
+          </div>
+
+          <!-- EMPRESAS -->
+          <div class="col-md-4">
+            <a href="empresas" class="menu-btn d-block">
+              <i class="bi bi-buildings"></i>
+              Empresas
+            </a>
+          </div>
+
+          <!-- DOCUMENTOS -->
+          <div class="col-md-4">
+            <a href="documentos" class="menu-btn d-block">
+              <i class="bi bi-folder2-open"></i>
+              Documentos
+            </a>
+          </div>
+
+          <!-- PROFESSORES -->
+          <div class="col-md-4">
+            <a href="professores" class="menu-btn d-block">
+              <i class="bi bi-person-badge-fill"></i>
+              Professores
+            </a>
+          </div>
+
+          <!-- ESTAGIÁRIOS -->
+          <div class="col-md-4">
+            <a href="estagiarios" class="menu-btn d-block">
+              <i class="bi bi-person-workspace"></i>
+              Estagiários
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/config.js"></script>
+  <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/loginGoogle.js"></script>
+  <script>
+    lg = new loginGoogle();
+    lg.renderAutentica();
+  </script>
+</html>

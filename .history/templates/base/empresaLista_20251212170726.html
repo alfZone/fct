@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal da Empresa</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css" />
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" />
+
+    <style>
+      body {
+        background: url("/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg") no-repeat center center fixed;
+        background-size: cover;
+        font-family: "Nunito", sans-serif;
+        animation: fadeInPage 1.2s ease-in-out;
+        padding-top: 40px;
+      }
+
+      @keyframes fadeInPage {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      #logo {
+        height: 120px;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
+        animation: fadeInPage 1.2s ease-in-out;
+      }
+
+      .portal-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(18px);
+        padding: 45px;
+        border-radius: 22px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        animation: fadeInPage 1.2s ease-out;
+        width: 80%;
+        max-width: 1400px; /* Limite máximo de largura */
+        margin: 0 auto; /* Centraliza */
+      }
+
+      .portal-title {
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: white;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .portal-title span {
+        color: #0066ff;
+      }
+
+      .btn-school {
+        padding: 18px;
+        font-size: 20px;
+        border-radius: 14px;
+        transition: 0.3s ease;
+        font-weight: 600;
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #0066ff, #003d99);
+        border: none;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(45deg, #1a7dff, #0044aa);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .btn-success {
+        background: linear-gradient(45deg, #00a859, #006b38);
+        border: none;
+      }
+      .btn-success:hover {
+        background: linear-gradient(45deg, #00c46a, #007a40);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      p {
+        color: #f0f0f0;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- LOGO NO TOPO -->
+    <header>
+      <img id="logo" src="/fct/templates/base/imagens/esm_174.png" alt="Logotipo da Escola" />
+    </header>
+
+    <!-- CONTEÚDO -->
+    <div class="container mt-3 mb-5">
+      <div class="portal-card mx-auto col-md-7 col-lg-5 text-center">
+        <h1 class="tbTitle"></h1>
+        <div class="d-flex justify-content-between mb-3">
+          <div>
+            <button id="exportCsv" class="btn btn-primary">CSV</button>
+            <button id="exportPdf" class="btn btn-secondary">PDF</button>
+          </div>
+          <div>
+            <input type="text" id="searchBox" class="form-control" placeholder="Search..." />
+          </div>
+        </div>
+        <table id="example" class="display table table-striped table-bordered" style="width: 100%">
+          <thead class="titleTable">
+            <tr>
+              <th>NIF</th>
+              <th>Empresa</th>
+              <th>Contacto</th>
+              <th>Telefone</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="bodyTable">
+            <tr>
+              <th>1111111</th>
+              <td>Tiger Nixon</td>
+              <td>System Architect</td>
+              <td>Edinburgh</td>
+              <td>
+                <button type="button" class="btn btn-outline-info bedit" data-bs-toggle="modal" data-bs-target="#frmIU" data-do="e"><i class="bi bi-pencil"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <th>1111111</th>
+              <td>Tiger Nixon</td>
+              <td>System Architect</td>
+              <td>Edinburgh</td>
+              <td>61</td>
+            </tr>
+            <tr>
+              <th>1111111</th>
+              <td>Tiger Nixon</td>
+              <td>System Architect</td>
+              <td>Edinburgh</td>
+              <td>61</td>
+            </tr>
+            <!-- More rows as needed -->
+          </tbody>
+          <thead class="titleTable">
+            <tr>
+              <th>NIF</th>
+              <th>Empresa</th>
+              <th>Contacto</th>
+              <th>Telefone</th>
+              <th></th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <!-- DataTables Buttons JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.12/jspdf.plugin.autotable.min.js"></script>
+    <!-- FileSaver.js for CSV export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+      //Asyncronous function (wait for the endPoint api anwser)
+      const readAPI = async () => {
+        let strHtml = ``;
+        const response = await fetch("https://turma12r.alunos.esmonserrate.org/fct/public/api/empresas");
+        const dataArray = await response.json();
+        for (const dataRecord of dataArray) {
+          strHtml += `
+                        <tr>
+                            <td>${dataRecord.NIF}</td>
+                            <td>${dataRecord.NomeEmpresa}</td>
+                            <td>${dataRecord.ContactoEmpresa}</td>
+                            <td>${dataRecord.Telefone}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-info bedit" ><i class="bi bi-pencil"></i></button>
+                            </td>
+                            </tr>
+                        `;
+        }
+        document.getElementById("bodyTable").innerHTML = strHtml;
+        initializeDataTable();
+      };
+      // function call
+      //readAPI();
+
+      // Função para inicializar o DataTable
+      // Função para inicializar o DataTable
+      function initializeDataTable() {
+        // Destruir DataTable existente (se houver)
+        if ($.fn.DataTable.isDataTable("#example")) {
+          $("#example").DataTable().destroy();
+        }
+
+        // Inicializar DataTable com os novos dados
+        var table = $("#example").DataTable({
+          pageLength: 20,
+          dom: '<"top">rt<"bottom"ip><"clear">',
+          buttons: [],
+          language: {
+            url: "//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese.json", // Opcional: tradução
+          },
+        });
+
+        // Search functionality
+        $("#searchBox").on("keyup", function () {
+          table.search(this.value).draw();
+        });
+
+        // Export to CSV
+        $("#exportCsv").on("click", function () {
+          var csv = "NIF,Empresa,Contacto,Telefone\n";
+          table.rows({ search: "applied" }).every(function () {
+            var data = this.data();
+            // Remove a última coluna (botões de ação)
+            var rowData = data.slice(0, -1);
+            csv += rowData.join(",") + "\n";
+          });
+
+          var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          saveAs(blob, "empresas.csv");
+        });
+
+        // Export to PDF
+        $("#exportPdf").on("click", function () {
+          var { jsPDF } = window.jspdf;
+          var doc = new jsPDF();
+
+          var header = [["NIF", "Empresa", "Contacto", "Telefone"]];
+          var data = [];
+          table.rows({ search: "applied" }).every(function () {
+            var row = this.data();
+            // Remove a última coluna (botões de ação)
+            var rowData = row.slice(0, -1);
+            data.push(rowData);
+          });
+
+          doc.autoTable({
+            head: header,
+            body: data,
+            margin: { top: 20 },
+            styles: { fontSize: 10 },
+          });
+
+          doc.save("empresas.pdf");
+        });
+      }
+
+      $(document).ready(function () {
+        // Initialize DataTable
+        var table = $("#example").DataTable({
+          pageLength: 20,
+          dom: '<"top">rt<"bottom"ip><"clear">',
+          buttons: [],
+        });
+
+        // Search functionality
+        $("#searchBox").on("keyup", function () {
+          table.search(this.value).draw();
+        });
+
+        // Export to CSV
+        $("#exportCsv").on("click", function () {
+          var csv = "Name,Position,Office,Age,Start date,Salary\n";
+          table.rows({ search: "applied" }).every(function () {
+            var data = this.data();
+            csv += data.join(",") + "\n";
+          });
+
+          var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          saveAs(blob, "data.csv");
+        });
+
+        // Export to PDF
+        $("#exportPdf").on("click", function () {
+          var { jsPDF } = window.jspdf;
+          var doc = new jsPDF();
+
+          var header = [["Name", "Position", "Office", "Age", "Start date", "Salary"]];
+          var data = [];
+          table.rows({ search: "applied" }).every(function () {
+            var row = this.data();
+            data.push(row);
+          });
+
+          doc.autoTable({
+            head: header,
+            body: data,
+          });
+
+          doc.save("data.pdf");
+        });
+      });
+    </script>
+  </body>
+</html>

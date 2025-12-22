@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Sistema Escolar Completo</title>
+
+<style>
+/* ===========================
+      ESTILOS GERAIS
+=========================== */
+:root {
+    --primary: #3f51b5;
+    --primary-hover: #2c3e9f;
+    --danger: #e53935;
+    --success: #43a047;
+    --bg: #f4f6fa;
+    --text: #333;
+}
+
+/* Dark Mode */
+.dark {
+    --bg: #1f1f1f;
+    --text: #f4f4f4;
+    --primary: #7986cb;
+    --primary-hover: #5c6bc0;
+    --danger: #ef5350;
+    --success: #66bb6a;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-primary { background: var(--primary); }
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-danger { background: var(--danger); }
+.btn-success { background: var(--success); }
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 5px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+}
+
+.hidden { display: none; }
+
+/* ========== MENU SUPERIOR ========== */
+.menu {
+    background: var(--primary);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu button {
+    background: white;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* ========== TABELAS ========== */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: #fafafa;
+}
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background: #f1f1ff;
+}
+th {
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+/* Dashboard simples */
+.dashboard-card {
+    padding: 20px;
+    background: #f7f7ff;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--primary);
+}
+
+/* Caixas */
+.box {
+    margin-top: 15px;
+    padding:
+

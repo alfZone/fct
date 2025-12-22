@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Distribuir Alunos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background:#f4f4f4;
+    font-family:Arial;
+    padding:0;
+    margin:0;
+}
+
+/* CABEÇALHO */
+header {
+    background:#004080;
+    padding:15px;
+    display:flex;
+    align-items:center;
+    color:white;
+}
+header img {
+    height:60px;
+    margin-right:20px;
+}
+header h1 {
+    margin:0;
+    font-size:28px;
+}
+
+/* CONTEÚDO */
+.container-box {
+    background:white;
+    width:90%;
+    max-width:900px;
+    margin:30px auto;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+.header-row {
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    font-weight:bold;
+    font-size:20px;
+    border-bottom:2px solid #004080;
+}
+
+.line-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:12px 0;
+}
+
+select {
+    width:42%;
+    padding:10px;
+    border-radius:5px;
+    border:1px solid #999;
+}
+
+/* CAIXA DE SELEÇÃO */
+.checkbox {
+    transform:scale(1.6);
+    margin-left:20px;
+}
+
+/* RODAPÉ */
+footer {
+    background:#004080;
+    color:white;
+    text-align:center;
+    padding:10px;
+    margin-top:40px;
+}
+</style>
+</head>
+<body>
+
+<!-- CABEÇALHO COM LOGO -->
+<header>
+    <img src="esm_logo.png" alt="Logo ESM">
+    <h1>Distribuir Alunos</h1>
+</header>
+
+<!-- CONTEÚDO -->
+<div class="container-box">
+
+    <div class="header-row">
+        <div>ALUNOS</div>
+        <div>EMPRESA</div>
+        <div></div>
+    </div>
+
+    <div id="linhas"></div>
+
+</div>
+
+<!-- RODAPÉ -->
+<footer>
+    © 2025 Escola Secundária de Mogadouro - Sistema FCT
+</footer>
+
+<script>
+// ENDPOINTS DA BASE DE DADOS
+const API_ALUNOS = "endpointAlunos.php";
+const API_EMPRESAS = "endpointEmpresas.php";
+
+let alunos = [];
+let empresas = [];
+
+async function carregarDados() {
+    try {
+        let respA = await fetch(API_ALUNOS);
+        let respE = await fetch(API_EMPRESAS);
+
+        alunos = await respA.json();
+        empresas = await respE.json();
+
+        criarLinhas();
+
+    } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+    }
+}
+
+function criarLinhas() {
+    const div = document.getElementById("linhas");
+    div.innerHTML = "";
+
+    // 4 linhas como na imagem
+    for (let i = 0; i < 4; i++) {
+        const linha = document.createElement("div");
+        linha.className = "line-row";
+
+        linha.innerHTML = `
+            <select>
+                <option value="">Selecione o aluno</option>
+                ${alunos.map(a => `<option value="${a.Processo}">${a.Nome}</option>`).join("")}
+            </select>
+
+            <select>
+                <option value="">Selecione a empresa</option>
+                ${empresas.map(e => `<option value="${e.ID}">${e.Nome}</option>`).join("")}
+            </select>
+
+            <input type="checkbox" class="checkbox">
+        `;
+
+        div.appendChild(linha);
+    }
+}
+
+carregarDados();
+</script>
+
+</body>
+</html>
+
+
+
+
+

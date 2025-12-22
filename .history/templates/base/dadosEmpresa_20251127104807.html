@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dados da Empresa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        background: #f5f6fa;
+      }
+      .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      }
+      h2 {
+        font-weight: 600;
+      }
+      .table th {
+        width: 260px;
+        vertical-align: middle;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4 mb-5">
+      <div class="card p-4">
+        <h2 class="mb-4 text-center">Ficha de Identificação da Empresa</h2>
+
+        <table class="table table-borderless align-middle">
+          <tbody>
+            <tr><th>Empresa</th><td><div class="input-group mb-3"><span class="input-group-text">Empresa</span><input type="text" class="form-control" placeholder="Nome da Empresa"></div></td></tr>
+
+            <tr><th>Responsável pelo Estagiário</th><td><div class="row g-2"><div class="col-md-6"><input type="text" class="form-control" placeholder="Primeiro Nome"></div><div class="col-md-6"><input type="text" class="form-control" placeholder="Último Nome"></div></div></td></tr>
+
+            <tr><th>Cargo</th><td><div class="input-group mb-3"><span class="input-group-text">Cargo</span><input type="text" class="form-control" placeholder="Responsável"></div></td></tr>
+
+            <tr><th>Sede / Morada</th><td><div class="input-group mb-3"><span class="input-group-text">Sede</span><input type="text" class="form-control" placeholder="Localização da Empresa"></div></td></tr>
+
+            <tr><th>Horário de Funcionamento</th><td><div class="input-group mb-3"><span class="input-group-text">Horário</span><input type="text" class="form-control" placeholder="Ex: 09h00 - 18h00"></div></td></tr>
+
+            <tr><th>Horas por Dia</th><td><div class="input-group mb-3"><span class="input-group-text">Horas</span><input type="text" class="form-control" placeholder="Ex: 7h / dia"></div></td></tr>
+
+            <tr><th>Monitor</th><td><div class="row g-2"><div class="col-md-6"><input type="text" class="form-control" placeholder="Primeiro Nome"></div><div class="col-md-6"><input type="text" class="form-control" placeholder="Último Nome"></div></div></td></tr>
+
+            <tr><th>Cargo do Monitor</th><td><div class="input-group mb-3"><span class="input-group-text">Cargo</span><input type="text" class="form-control" placeholder="Monitor"></div></td></tr>
+
+            <tr><th>Email</th><td><div class="input-group mb-3"><span class="input-group-text">Email</span><input type="email" class="form-control" placeholder="exemplo@empresa.com"></div></td></tr>
+
+            <tr><th>Telefone</th><td><div class="input-group mb-3"><span class="input-group-text">Contacto</span><input type="text" class="form-control" placeholder="Número de Telefone"></div></td></tr>
+
+            <tr><th>NIF</th><td><div class="input-group mb-3"><span class="input-group-text">NIF</span><input type="text" class="form-control" placeholder="Número de Identificação Fiscal"></div></td></tr>
+
+            <!-- Campos adicionais profissionais -->
+
+            <tr><th>Website</th><td><div class="input-group mb-3"><span class="input-group-text">https://</span><input type="text" class="form-control" placeholder="Site da empresa"></div></td></tr>
+
+            <tr><th>Área de Atuação</th><td><div class="input-group mb-3"><span class="input-group-text">Área</span><input type="text" class="form-control" placeholder="Ex: Tecnologia, Saúde, Serviços..."></div></td></tr>
+
+            <tr><th>Nº de Funcionários</th><td><div class="input-group mb-3"><span class="input-group-text">Total</span><input type="number" class="form-control" placeholder="Quantidade de Funcionários"></div></td></tr>
+
+            <tr><th>Data de Fundação</th><td><input type="date" class="form-control"/></td></tr>
+
+            <tr><th>Descrição da Empresa</th><td><textarea class="form-control" rows="3" placeholder="Breve descrição da organização"></textarea></td></tr>
+
+            <tr><th>Observações</th><td><textarea class="form-control" rows="3" placeholder="Notas adicionais"></textarea></td></tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

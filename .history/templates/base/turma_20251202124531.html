@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciamento de Turmas</title>
+
+    <style>
+        :root {
+            --primary: #007bff;
+            --primary-hover: #0056b3;
+            --success-bg: #e8f5e9;
+            --success-border: #4caf50;
+            --danger-bg: #ffebee;
+            --danger-border: #c62828;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f7;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 3px 12px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #bbb;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--success-bg);
+            border-left: 4px solid var(--success-border);
+            display: none;
+            border-radius: 6px;
+        }
+
+        #lista-turmas {
+            margin-top: 30px;
+        }
+
+        .turma-item {
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Cadastro de Turma</h1>
+
+        <form id="form-turma">
+            <label for="turma">Turma:</label>
+            <input type="text" id="turma" placeholder="Ex: 3A" required>
+
+            <label for="ano-letivo">Ano Letivo:</label>
+            <input type="number" id="ano-letivo" placeholder="2025" required>
+
+            <button type="submit">Salvar Turma</button>
+        </form>
+
+        <div id="resultado"></div>
+
+        <h2 style="margin-top: 30px; color: #333;">Turmas Cadastradas</h2>
+        <div id="lista-turmas"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById("form-turma");
+        const resultadoDiv = document.getElementById("resultado");
+        const listaDiv = document.getElementById("lista-turmas");
+
+        let turmas = [];
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const turma = document.getElementById("turma").value.trim();
+            const anoLetivo = document.getElementById("ano-letivo").value.trim();
+
+            // Validação básica extra
+            if (turma === "" || anoLetivo === "") {
+                mostrarErro("Preencha todos os campos corretamente!");
+                return;
+            }
+
+            const novaTurma = { turma, anoLetivo };
+            turmas.push(novaTurma);
+
+            // Mensagem de sucesso
+            resultadoDiv.innerHTML = `
+                <strong>Turma cadastrada com sucesso!</strong><br><br>
+                <b>Turma:</b> ${turma}<br>
+                <b>Ano Letivo:</b> ${anoLetivo}
+            `;
+            resultadoDiv.style.display = "block";
+
+            // Atualiza lista visual
+            atualizarLista();
+
+            // Limpa campos
+            form.reset();
+        });
+
+        function mostrarErro(msg) {
+            resultadoDiv.innerHTML = `
+                <strong style="color:#c62828;">Erro:</strong><br>${msg}
+            `;
+            resultadoDiv.style.background = "var(--danger-bg)";
+            resultadoDiv.style.borderLeft = `4px solid var(--danger-border)`;
+            resultadoDiv.style.display = "block";
+        }
+
+        function atualizarLista() {
+            listaDiv.innerHTML = "";
+
+            turmas.forEach((t, i) => {
+                const item = document.createElement("div");
+                item.className = "turma-item";
+                item.innerHTML = `
+                    <b>${t.turma}</b> — Ano: ${t.anoLetivo}
+                `;
+                listaDiv.appendChild(item);
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sistema Escolar — Versão SUPER COMPLETA</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#fff; --primary:#2563eb; --accent:#10b981; --danger:#ef4444; --muted:#6b7280;
+    --glass: rgba(255,255,255,0.8);
+  }
+  .dark{ --bg:#0b1220; --card:#0f1724; --primary:#60a5fa; --accent:#34d399; --danger:#fb7185; --muted:#9ca3af; --glass: rgba(255,255,255,0.02); color:#e6eef8 }
+  *{box-sizing:border-box}
+  body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);margin:0;padding:0;color: #0f1724}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg,var(--card),transparent);box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  header .brand{font-weight:700;letter-spacing:0.2px}
+  header .actions{display:flex;gap:8px;align-items:center}
+  button{cursor:pointer;border:0;border-radius:8px;padding:8px 12px;background:var(--primary);color:white}
+  button.ghost{background:transparent;color:var(--primary);border:1px solid rgba(0,0,0,0.05)}
+  .container{max-width:1200px;margin:24px auto;padding:16px}
+  .grid{display:grid;grid-template-columns:260px 1fr;gap:20px}
+  nav{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+  nav .menu-item{padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  nav .menu-item button{background:transparent;color:var(--muted);font-weight:600}
+  main{background:var(--card);padding:16px;border-radius:12px;min-height:60vh}
+  h2{margin:8px 0 16px}
+  .card{background:var(--glass);padding:12px;border-radius:10px;margin-bottom:12px}
+  .flex{display:flex;gap:12px;align-items:center}
+  .space{flex:1}
+  input,select,textarea{padding:10px;border-radius:8px;border:1px solid rgba(15,23,36,0.08);width:100;background:white}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:8px;border-bottom:1px solid rgba(15,23,36,0.06);text-align:left}
+  .small{font-size:13px;color:var(--muted)}
+  .pill{padding:6px 8px;border-radius:999px;background:rgba(15,23,36,0.06);font-size:12px}
+  .actions-inline button{margin-right:6px;padding:6px 8px;border-radius:6px}
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+  /* responsive */
+  @media(max-width:900px){.grid{grid-template-columns:1fr;}.container{padding:12px}}
+  /* small chart canvas */
+  .chart-wrap{height:160px}
+  /* accessibility focus */
+  button:focus,input:focus,select:focus,textarea:focus{outline:3px solid rgba(37,99,235,0.18)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">📚 Sistema Escolar — SUPER COMPLETO</div>
+  <div class="actions">
+    <div id="userDisplay" class="small"></div>
+    <button id="toggleTheme">Dark</button>
+    <button id="logoutBtn" class="ghost">Logout</button>
+  </div>
+</header>
+
+<div class="container">
+  <div id="contentArea"></div>
+</div>
+
+<footer>Versão local — Dados salvos no seu navegador (localStorage). • Desenvolvido em uma única página.</footer>
+
+<script>
+/* -------------------------
+  UTILIDADES GLOBAIS
+------------------------- */
+const DB_KEY = "sistema_escolar_v4";
+const LOG_KEY = "sistema_escolar_logs_v4";
+const UNDO_KEY = "sistema_escolar_undo_v4";
+
+function uid(prefix='id'){return prefix + '_' + Math.random().toString(36).slice(2,10)}
+function now(){return new Date().toISOString()}
+function saveDB(data){localStorage.setItem(DB_KEY, JSON.stringify(data));}
+function loadDB(){try{return JSON.parse(localStorage.getItem(DB_KEY))|| null}catch(e){return null}}
+function saveLog(entry){const logs = JSON.parse(localStorage.getItem(LOG_KEY)|| "[]"); logs.unshift(entry); localStorage.setItem(LOG_KEY, JSON.stringify(logs))}
+function pushUndo(snapshot){localStorage.setItem(UNDO_KEY, JSON.stringify({time:now(), snapshot}))}
+function popUndo(){const s = localStorage.getItem(UNDO_KEY); localStorage.removeItem(UNDO_KEY); return s ? JSON.parse(s) : null}
+
+/* -------------------------
+  ESTRUTURA DE DADOS PADRÃO
+------------------------- */
+const defaultData = {
+  users:[
+    {id:uid('u'),name:"Admin",username:"admin",role:"admin",password:"123"}, // local simple auth
+    {id:uid('u'),name:"Prof. Maria",username:"maria",role:"teacher",password:"maria"}
+  ],
+  turmas:[
+    {id:uid('t'),name:"3º A",year:2025,teacherId:null,students:[]},
+    {id:uid('t'),name:"2º B",year:2025,teacherId:null,students:[]}
+  ],
+  teachers:[],
+  assignments:[], // avaliações {id,title,weight, turmaId, date}
+  attendance: {}, // {turmaId: { '2025-12-01': {studentId:true}}}
+  createdAt: now()
+};
+
+/* -------------------------
+  INICIALIZAÇÃO (carrega DB)
+------------------------- */
+let DB = loadDB();
+if(!DB){ DB = defaultData; seedSampleData(); saveDB(DB); }
+let currentUser = null;
+
+/* -------------------------
+  INTERFACE: RENDERIZAÇÃO GERAL
+------------------------- */
+const contentArea = document.getElementById('contentArea');
+const userDisplay = document.getElementById('userDisplay');
+document.getElementById('toggleTheme').addEventListener('click', toggleTheme);
+document.getElementById('logoutBtn').addEventListener('click', ()=>{logout();});
+
+// Start: show login or app
+renderApp();
+
+function renderApp(){
+  if(!currentUser){
+    renderLogin();
+  } else {
+    userDisplay.textContent = `${currentUser.name} (${currentUser.role})`;
+    renderDashboard();
+  }
+}
+
+/* ============================
+   LOGIN / AUTENTICAÇÃO
+   ============================ */
+function renderLogin(){
+  document.getElementById('userDisplay').textContent = '';
+  contentArea.innerHTML = `
+    <main>
+      <h2>Login</h2>
+      <div class="card">
+        <div style="max-width:420px">
+          <label class="small">Usuário</label>
+          <input id="loginUser" aria-label="Usuário">
+          <label class="small">Senha</label>
+          <input id="loginPass" type="password" aria-label="Senha">
+          <div style="margin-top:12px" class="flex">
+            <button id="btnLogin">Entrar</button>
+            <button id="btnLoadDemo" class="ghost">Carregar Demo</button>
+            <div class="space"></div>
+            <button id="btnRestore" class="ghost">Import/Export</button>
+          </div>
+          <p class="small" style="margin-top:10px">Usuários padrão: admin/123 • maria/maria</p>
+        </div>
+      </div>
+    </main>
+  `;
+  document.getElementById('btnLogin').addEventListener('click', doLogin);
+  document.getElementById('btnLoadDemo').addEventListener('click', ()=>{seedSampleData(); saveDB(DB); alert('Demo carregada');});
+  document.getElementById('btnRestore').addEventListener('click', renderImportExport);
+}
+
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const user = (DB.users||[]).find(x=> (x.username===u && x.password===p));
+  if(user){ currentUser = user; renderApp(); } else alert("Credenciais inválidas");
+}
+function logout(){currentUser=null; renderApp();}
+
+/* ============================
+   DASHBOARD PRINCIPAL (menus)
+   ============================ */
+function renderDashboard(){
+  // main layout: nav + main area
+  contentArea.innerHTML = `
+    <div class="grid">
+      <nav>
+        <div style="margin-bottom:8px"><strong>Menu</strong></div>
+        <div class="menu-item"><span>Dashboard</span><button onclick="renderDashboard()">></button></div>
+        <div class="menu-item"><span>Turmas</span><button onclick="renderTurmas()">></button></div>
+        <div class="menu-item"><span>Alunos</span><button onclick="renderStudents()">></button></div>
+        <div class="menu-item"><span>Avaliações</span><button onclick="renderAssignments()">></button></div>
+        <div class="menu-item"><span>Presenças</span><button onclick="renderAttendance()">></button></div>
+        <div class="menu-item"><span>Relatórios & Export</span><button onclick="renderReports()">></button></div>
+        <div class="menu-item"><span>Usuários</span><button onclick="renderUsers()">></button></div>
+        <div class="menu-item"><span>Logs</span><button onclick="renderLogs()">></button></div>
+        <div style="margin-top:10px" class="small">Banco local salvo: <strong>${(new Date(DB.createdAt)).toLocaleString()}</strong></div>
+      </nav>
+      <main id="mainArea">
+        <h2>Dashboard</h2>
+        <div class="card flex">
+          <div style="width:33%">
+            <div class="small">Total de Turmas</div>
+            <div style="font-weight:700;font-size:20px">${DB.turmas.length}</div>
+          </div>
+          <div style="width:33%">
+            <div class="small">Total de Alunos</div>
+            <div style="font-weight:700;font-size:20px">${countStudents()}</div>
+          </div>
+          <div style="width:33%">
+            <div class="small">Total de Avaliações</div>
+            <div style="font-weight:700;font-size:20px">${DB.assignments.length}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="small">Distribuição de alunos por turma</h3>
+          <div class="chart-wrap"><canvas id="chartTurmas" width="600" height="160"></canvas></div>
+        </div>
+
+        <div class="card">
+          <h3 class="small">Últimas ações (logs)</h3>
+          <div id="miniLogs" class="small"></div>
+        </div>
+
+      </main>
+    </div>
+  `;
+  renderMiniLogs();
+  drawTurmasChart();
+}
+
+/* ---------------------------
+   FUNÇÕES AUXILIARES DO DASH
+--------------------------- */
+function countStudents(){
+  let c=0; for(const t of DB.turmas) c += (t.students||[]).length; return c;
+}
+function renderMiniLogs(){
+  const logs = JSON.parse(localStorage.getItem(LOG_KEY) || "[]").slice(0,6);
+  const container = document.getElementById('miniLogs');
+  container.innerHTML = logs.map(l=> `<div>${new Date(l.time).toLocaleString()} — <span class="small">${l.action}</span></div>`).join('');
+}
+function drawTurmasChart(){
+  const canvas = document.getElementById('chartTurmas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height);
+  const labels = DB.turmas.map(t=>t.name);
+  const data = DB.turmas.map(t=> (t.students||[]).length );
+  // simple bar chart
+  const max = Math.max(5, ...data);
+  const w = canvas.width, h = canvas.height;
+  const barW = (w / labels.length) * 0.6;
+  labels.forEach((lab,i)=>{
+    const val = data[i];
+    const x = (i * (w / labels.length)) + ((w / labels.length - barW)/2);
+    const height = (val / max) * (h - 30);
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary') || '#2563eb';
+    ctx.fillRect(x, h - height - 20, barW, height);
+    ctx.fillStyle = '#111';
+    ctx.font = '12px Arial';
+    ctx.fillText(lab, x, h - 5);
+    ctx.fillText(val, x + barW/2 - 6, h - height - 26);
+  })
+}
+
+/* ============================
+   TURMAS: LISTAR / CRUD
+   ============================ */
+function renderTurmas(){
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Gerenciamento de Turmas</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:220px">
+          <label>Nome da Turma</label><input id="turmaName">
+        </div>
+        <div style="width:160px">
+          <label>Ano</label><input id="turmaYear" type="number" value="${(new Date()).getFullYear()}">
+        </div>
+        <div style="width:200px">
+          <label>Professor (opcional)</label>
+          <select id="turmaTeacher"><option value="">— selecionar —</option>
+            ${(DB.users||[]).filter(u=>u.role==='teacher').map(u=>`<option value="${u.id}">${u.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="space"></div>
+        <div>
+          <label>&nbsp;</label>
+          <button id="btnCreateTurma">Criar Turma</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Buscar / Filtrar</label>
+      <div class="flex"><input id="filterTurma" placeholder="Buscar por nome/ano"><div><button id="btnExportTurmas" class="ghost">Exportar CSV</button></div></div>
+      <div id="turmasList"></div>
+    </div>
+  `;
+  document.getElementById('btnCreateTurma').addEventListener('click', createTurma);
+  document.getElementById('filterTurma').addEventListener('input', ()=> listTurmas(document.getElementById('filterTurma').value));
+  document.getElementById('btnExportTurmas').addEventListener('click', ()=> exportCSV( turmasToCSV(), 'turmas.csv'));
+  listTurmas('');
+}
+function createTurma(){
+  const name = document.getElementById('turmaName').value.trim();
+  const year = parseInt(document.getElementById('turmaYear').value);
+  const teacherId = document.getElementById('turmaTeacher').value || null;
+  if(!name || !year){ alert('Preencha nome e ano'); return; }
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const t = {id:uid('t'), name, year, teacherId, students:[]};
+  DB.turmas.push(t); saveDB(DB); saveLog({time:now(),action:`Turma criada: ${name}`}); renderTurmas(); renderMiniLogs(); drawTurmasChart();
+}
+function listTurmas(filter){
+  const cont = document.getElementById('turmasList'); cont.innerHTML='';
+  const arr = DB.turmas.filter(t=>{
+    if(!filter) return true;
+    const f = filter.toLowerCase();
+    return (t.name||'').toLowerCase().includes(f) || (t.year+'').includes(f);
+  });
+  if(arr.length===0){ cont.innerHTML = '<div class="small">Nenhuma turma encontrada</div>'; return; }
+  let html = `<table><thead><tr><th>Nome</th><th>Ano</th><th>Alunos</th><th>Professor</th><th>Ações</th></tr></thead><tbody>`;
+  html += arr.map((t,i)=>{
+    const teacher = DB.users.find(u=>u.id===t.teacherId);
+    return `<tr>
+      <td>${t.name}</td>
+      <td>${t.year}</td>
+      <td>${(t.students||[]).length}</td>
+      <td>${teacher ? teacher.name : '-'}</td>
+      <td class="actions-inline">
+        <button onclick="openTurma('${t.id}')">Abrir</button>
+        <button onclick="exportTurma('${t.id}')" class="ghost">Export</button>
+        <button onclick="deleteTurma('${t.id}')" class="btn-danger">Excluir</button>
+      </td>
+    </tr>`
+  }).join('');
+  html += `</tbody></table>`;
+  cont.innerHTML = html;
+}
+function openTurma(id){
+  const turma = DB.turmas.find(t=>t.id===id); if(!turma) return;
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Turma: ${turma.name} — ${turma.year}</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:320px">
+          <label>Adicionar aluno</label>
+          <input id="studentName" placeholder="Nome completo">
+        </div>
+        <div style="width:120px">
+          <label>Idade</label><input id="studentAge" type="number">
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button id="btnAddStudent">Adicionar</button>
+        </div>
+        <div class="space"></div>
+        <div style="text-align:right">
+          <label>&nbsp;</label>
+          <button onclick="renderTurmas()" class="ghost">Voltar</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <label>Alunos</label>
+      <div id="studentsTable"></div>
+    </div>
+  `;
+  document.getElementById('btnAddStudent').addEventListener('click', ()=> addStudentToTurma(id));
+  renderStudentsTable(id);
+}
+function addStudentToTurma(tid){
+  const name = document.getElementById('studentName').value.trim();
+  const age = parseInt(document.getElementById('studentAge').value) || null;
+  if(!name){ alert('Nome obrigatório'); return; }
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const s = {id:uid('s'), name, age, meta:{}};
+  const t = DB.turmas.find(x=>x.id===tid); t.students.push(s);
+  saveDB(DB); saveLog({time:now(),action:`Aluno ${name} adicionado à turma ${t.name}`}); renderStudentsTable(tid); drawTurmasChart(); renderMiniLogs();
+  document.getElementById('studentName').value=''; document.getElementById('studentAge').value='';
+}
+function renderStudentsTable(tid){
+  const t = DB.turmas.find(x=>x.id===tid);
+  const container = document.getElementById('studentsTable'); if(!t) return;
+  if((t.students||[]).length===0){ container.innerHTML = '<div class="small">Nenhum aluno</div>'; return; }
+  let html = `<table><thead><tr><th>Nome</th><th>Idade</th><th>Ações</th></tr></thead><tbody>`;
+  html += t.students.map(s=> `<tr><td>${s.name}</td><td>${s.age||'-'}</td><td>
+    <button onclick="viewStudent('${tid}','${s.id}')">Ver</button>
+    <button onclick="removeStudent('${tid}','${s.id}')" class="btn-danger">Remover</button>
+  </td></tr>`).join('');
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+function removeStudent(tid,sid){
+  if(!confirm('Remover aluno?')) return;
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const t = DB.turmas.find(x=>x.id===tid);
+  const idx = t.students.findIndex(x=>x.id===sid);
+  if(idx>=0){ const name = t.students[idx].name; t.students.splice(idx,1); saveDB(DB); saveLog({time:now(),action:`Aluno ${name} removido de ${t.name}`}); renderStudentsTable(tid); drawTurmasChart(); renderMiniLogs(); }
+}
+function deleteTurma(id){
+  if(!confirm('Excluir turma permanentemente?')) return;
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const idx = DB.turmas.findIndex(t=>t.id===id);
+  if(idx>=0){ const name = DB.turmas[idx].name; DB.turmas.splice(idx,1); saveDB(DB); saveLog({time:now(),action:`Turma excluída: ${name}`}); renderTurmas(); renderMiniLogs(); drawTurmasChart() }
+}
+function exportTurma(id){
+  const t = DB.turmas.find(x=>x.id===id); if(!t) return;
+  const content = JSON.stringify(t, null, 2);
+  const blob = new Blob([content], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `${t.name.replace(/\s+/g,'_')}.json`; a.click(); URL.revokeObjectURL(url);
+}
+
+/* ============================
+   ALUNO: ver detalhes / notas
+   ============================ */
+function viewStudent(tid,sid){
+  const turma = DB.turmas.find(x=>x.id===tid);
+  const student = turma.students.find(s=>s.id===sid);
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Aluno: ${student.name}</h2>
+    <div class="card">
+      <div style="display:flex;gap:12px;">
+        <div style="width:220px">
+          <div class="small">Nome</div><input id="editStudentName" value="${student.name}">
+          <div class="small">Idade</div><input id="editStudentAge" value="${student.age||''}" type="number">
+        </div>
+        <div style="flex:1">
+          <div class="small">Notas e Avaliações</div>
+          <div id="studentGrades"></div>
+        </div>
+        <div style="width:160px">
+          <label>&nbsp;</label>
+          <div><button id="btnSaveStudent">Salvar</button></div>
+          <div style="height:12px"></div>
+          <div><button class="ghost" onclick="openTurma('${tid}')">Voltar</button></div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btnSaveStudent').addEventListener('click', ()=>{
+    pushUndo(JSON.parse(JSON.stringify(DB)));
+    student.name = document.getElementById('editStudentName').value.trim();
+    student.age = parseInt(document.getElementById('editStudentAge').value) || null;
+    saveDB(DB); saveLog({time:now(),action:`Aluno ${student.name} atualizado`}); viewStudent(tid,sid);
+  });
+  renderStudentGrades(tid,sid);
+}
+function renderStudentGrades(tid,sid){
+  const list = DB.assignments.filter(a=>a.turmaId===tid);
+  const container = document.getElementById('studentGrades');
+  if(!list.length){ container.innerHTML = '<div class="small">Nenhuma avaliação lançada para esta turma.</div>'; return; }
+  const turma = DB.turmas.find(t=>t.id===tid);
+  const student = turma.students.find(s=>s.id===sid);
+  let html = `<table><thead><tr><th>Avaliação</th><th>Peso</th><th>Data</th><th>Nota</th></tr></thead><tbody>`;
+  html += list.map(a=>{
+    const note = (a.scores||{})[sid];
+    return `<tr><td>${a.title}</td><td>${a.weight}</td><td>${new Date(a.date).toLocaleDateString()}</td>
+      <td><input style="width:90px" value="${note!==undefined?note:''}" onchange="saveGrade('${a.id}','${sid}', this.value)"></td>
+    </tr>`
+  }).join('');
+  html += `</tbody></table>`;
+  html += `<div style="margin-top:8px" class="small">Média ponderada: <strong>${calcStudentAverage(tid,sid).toFixed(2)}</strong></div>`;
+  container.innerHTML = html;
+}
+function saveGrade(assignmentId, studentId, value){
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const a = DB.assignments.find(x=>x.id===assignmentId);
+  const v = parseFloat(value);
+  if(value==='' || isNaN(v)){ if(a.scores) delete a.scores[studentId]; } else { a.scores = a.scores || {}; a.scores[studentId] = v; }
+  saveDB(DB); saveLog({time:now(),action:`Nota lançada: assignment ${a.title} — student ${studentId} = ${value}`});
+  renderStudentGrades(a.turmaId, studentId);
+}
+function calcStudentAverage(tid,sid){
+  const assigns = DB.assignments.filter(a=>a.turmaId===tid);
+  let total=0, weight=0;
+  assigns.forEach(a=>{
+    const s = (a.scores||{})[sid];
+    if(s!==undefined && !isNaN(s)){ total += s * (a.weight||1); weight += (a.weight||1); }
+  });
+  return weight? total/weight : 0;
+}
+
+/* ============================
+   AVALIAÇÕES (Assignments)
+   ============================ */
+function renderAssignments(){
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Avaliações / Provas</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:220px"><label>Título</label><input id="assTitle"></div>
+        <div style="width:120px"><label>Peso</label><input id="assWeight" type="number" value="1"></div>
+        <div style="width:200px"><label>Turma</label>
+          <select id="assTurma">${DB.turmas.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+        <div style="width:160px"><label>Data</label><input id="assDate" type="date" value="${(new Date()).toISOString().slice(0,10)}"></div>
+        <div class="space"></div>
+        <div><label>&nbsp;</label><button id="btnCreateAss">Criar Avaliação</button></div>
+      </div>
+    </div>
+    <div class="card"><div id="assignList"></div></div>
+  `;
+  document.getElementById('btnCreateAss').addEventListener('click', createAssignment);
+  renderAssignmentsList();
+}
+function createAssignment(){
+  const title = document.getElementById('assTitle').value.trim();
+  const weight = parseFloat(document.getElementById('assWeight').value) || 1;
+  const turmaId = document.getElementById('assTurma').value;
+  const date = document.getElementById('assDate').value;
+  if(!title || !turmaId){ alert('Título e turma obrigatórios'); return; }
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const a = {id:uid('a'),title,weight,turmaId,date, scores:{}};
+  DB.assignments.push(a); saveDB(DB); saveLog({time:now(),action:`Avaliação criada: ${title}`}); renderAssignmentsList();
+}
+function renderAssignmentsList(){
+  const cont = document.getElementById('assignList'); if(!cont) return;
+  if(DB.assignments.length===0){ cont.innerHTML='<div class="small">Nenhuma avaliação cadastrada.</div>'; return; }
+  let html = `<table><thead><tr><th>Título</th><th>Turma</th><th>Peso</th><th>Data</th><th>Ações</th></tr></thead><tbody>`;
+  html += DB.assignments.map(a=>{
+    const turma = DB.turmas.find(t=>t.id===a.turmaId);
+    return `<tr><td>${a.title}</td><td>${turma?turma.name:'-'}</td><td>${a.weight}</td><td>${new Date(a.date).toLocaleDateString()}</td>
+    <td><button onclick="openAssignment('${a.id}')">Abrir</button> <button class="btn-danger" onclick="deleteAssignment('${a.id}')">Excluir</button></td></tr>`
+  }).join('');
+  html += `</tbody></table>`;
+  cont.innerHTML = html;
+}
+function openAssignment(id){
+  const a = DB.assignments.find(x=>x.id===id); if(!a) return;
+  const turma = DB.turmas.find(t=>t.id===a.turmaId);
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Avaliação: ${a.title}</h2>
+    <div class="card">
+      <div class="small">Turma: ${turma?turma.name:'-'}</div>
+      <div style="margin-top:8px" class="small">Lançar notas</div>
+      <div id="scoresList"></div>
+      <div style="margin-top:8px">
+        <button class="ghost" onclick="renderAssignments()">Voltar</button>
+        <button onclick="exportAssignmentCSV('${a.id}')">Exportar CSV</button>
+      </div>
+    </div>
+  `;
+  renderScoresList(a.id);
+}
+function renderScoresList(aid){
+  const a = DB.assignments.find(x=>x.id===aid); const turma = DB.turmas.find(t=>t.id===a.turmaId);
+  const container = document.getElementById('scoresList'); if(!container) return;
+  if(!turma || (turma.students||[]).length===0){ container.innerHTML='<div class="small">Nenhum aluno nesta turma.</div>'; return; }
+  let html = `<table><thead><tr><th>Aluno</th><th>Nota</th></tr></thead><tbody>`;
+  html += turma.students.map(s=> `<tr><td>${s.name}</td><td><input value="${a.scores && a.scores[s.id]!==undefined ? a.scores[s.id] : ''}" onchange="saveGrade('${aid}','${s.id}', this.value)"></td></tr>`).join('');
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+function deleteAssignment(id){
+  if(!confirm('Excluir avaliação?')) return;
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const idx = DB.assignments.findIndex(a=>a.id===id); if(idx>=0){ const t=DB.assignments[idx]; DB.assignments.splice(idx,1); saveDB(DB); saveLog({time:now(),action:`Avaliação excluída: ${t.title}`}); renderAssignments(); }
+}
+
+/* ============================
+   PRESENÇAS (attendance)
+   ============================ */
+function renderAttendance(){
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Registro de Presenças</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:220px">
+          <label>Turma</label><select id="attTurma">${DB.turmas.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select>
+        </div>
+        <div style="width:160px">
+          <label>Data</label><input id="attDate" type="date" value="${(new Date()).toISOString().slice(0,10)}">
+        </div>
+        <div class="space"></div>
+        <div style="text-align:right"><label>&nbsp;</label><button id="btnLoadAtt">Abrir</button></div>
+      </div>
+    </div>
+    <div id="attendanceList" class="card"></div>
+  `;
+  document.getElementById('btnLoadAtt').addEventListener('click', ()=> loadAttendance(document.getElementById('attTurma').value, document.getElementById('attDate').value));
+}
+function loadAttendance(tid, date){
+  if(!tid || !date) return alert('Escolha turma e data');
+  const t = DB.turmas.find(x=>x.id===tid);
+  const att = (DB.attendance[tid] && DB.attendance[tid][date]) || {};
+  let html = `<h3>${t.name} — ${new Date(date).toLocaleDateString()}</h3>`;
+  html += `<div class="small">Clique para marcar presente/falta</div><table><thead><tr><th>Aluno</th><th>Status</th></tr></thead><tbody>`;
+  html += (t.students||[]).map(s=>`<tr><td>${s.name}</td><td><button onclick="toggleAttendance('${tid}','${date}','${s.id}', this)">${att[s.id] ? 'Presente' : 'Ausente'}</button></td></tr>`).join('');
+  html += `</tbody></table><div style="margin-top:8px"><button onclick="exportAttendanceCSV('${tid}','${date}')">Exportar CSV</button></div>`;
+  document.getElementById('attendanceList').innerHTML = html;
+}
+function toggleAttendance(tid,date,sid,btn){
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  DB.attendance[tid] = DB.attendance[tid] || {};
+  DB.attendance[tid][date] = DB.attendance[tid][date] || {};
+  DB.attendance[tid][date][sid] = !DB.attendance[tid][date][sid];
+  saveDB(DB); saveLog({time:now(),action:`Presença: turma ${tid} date ${date} student ${sid} => ${DB.attendance[tid][date][sid]}`});
+  btn.textContent = DB.attendance[tid][date][sid] ? 'Presente' : 'Ausente';
+}
+
+/* ============================
+   RELATÓRIOS / EXPORT
+   ============================ */
+function renderReports(){
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Relatórios e Exportação</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:200px"><label>Selecionar Turma</label><select id="reportTurma"><option value="">— todas —</option>${DB.turmas.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+        <div class="space"></div>
+        <div style="width:220px"><label>&nbsp;</label><button id="btnExportAll">Exportar backup (JSON)</button></div>
+      </div>
+    </div>
+    <div id="reportResult" class="card small"></div>
+  `;
+  document.getElementById('btnExportAll').addEventListener('click', ()=> exportBackup());
+}
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='backup_sistema_escolar.json'; a.click();
+}
+function exportAssignmentCSV(aid){
+  const a = DB.assignments.find(x=>x.id===aid); if(!a) return;
+  const turma = DB.turmas.find(t=>t.id===a.turmaId);
+  const rows = [['Aluno','Nota']];
+  turma.students.forEach(s=> rows.push([s.name, (a.scores && a.scores[s.id]!==undefined)? a.scores[s.id] : '']));
+  downloadCSV(rows, `${a.title.replace(/\s+/g,'_')}.csv`);
+}
+function exportAttendanceCSV(tid,date){
+  const t = DB.turmas.find(x=>x.id===tid); const att = (DB.attendance[tid] && DB.attendance[tid][date])||{};
+  const rows = [['Aluno','Presente?','Data']];
+  t.students.forEach(s=> rows.push([s.name, att[s.id] ? 'Sim' : 'Nao', date]));
+  downloadCSV(rows, `${t.name.replace(/\s+/g,'_')}_attendance_${date}.csv`);
+}
+function turmasToCSV(){
+  const rows = [['Turma','Ano','Alunos']];
+  DB.turmas.forEach(t=> rows.push([t.name, t.year, (t.students||[]).length]));
+  return rows;
+}
+function downloadCSV(rows, filename){
+  const csv = rows.map(r=> r.map(cell=> `"${(''+cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+}
+function exportCSV(rows, filename){ downloadCSV(rows, filename); }
+
+/* ============================
+   USUÁRIOS (simples CRUD)
+   ============================ */
+function renderUsers(){
+  if(currentUser.role !== 'admin'){ alert('Acesso negado: apenas admin'); return; }
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Usuários</h2>
+    <div class="card">
+      <div class="flex">
+        <div style="width:240px"><label>Nome</label><input id="newUserName"></div>
+        <div style="width:160px"><label>Username</label><input id="newUserUsername"></div>
+        <div style="width:120px"><label>Senha</label><input id="newUserPass" type="password"></div>
+        <div style="width:140px"><label>Role</label>
+          <select id="newUserRole"><option value="teacher">Professor</option><option value="admin">Admin</option></select>
+        </div>
+        <div class="space"></div>
+        <div><label>&nbsp;</label><button id="btnCreateUser">Criar</button></div>
+      </div>
+    </div>
+    <div class="card"><div id="usersList"></div></div>
+  `;
+  document.getElementById('btnCreateUser').addEventListener('click', createUser);
+  renderUsersList();
+}
+function createUser(){
+  const name = document.getElementById('newUserName').value.trim();
+  const username = document.getElementById('newUserUsername').value.trim();
+  const password = document.getElementById('newUserPass').value.trim();
+  const role = document.getElementById('newUserRole').value;
+  if(!name||!username||!password){ alert('Preencha todos os campos'); return;}
+  if(DB.users.find(u=>u.username===username)){ alert('Username já existe'); return; }
+  const u = {id:uid('u'),name,username,role,password};
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  DB.users.push(u); saveDB(DB); saveLog({time:now(),action:`Usuário criado: ${name}`}); renderUsersList();
+}
+function renderUsersList(){
+  const container = document.getElementById('usersList');
+  const arr = DB.users||[];
+  let html = `<table><thead><tr><th>Nome</th><th>Username</th><th>Role</th><th>Ações</th></tr></thead><tbody>`;
+  html += arr.map(u=>`<tr><td>${u.name}</td><td>${u.username}</td><td>${u.role}</td><td><button onclick="removeUser('${u.id}')">Remover</button></td></tr>`).join('');
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+function removeUser(uid){
+  if(!confirm('Remover usuário?')) return;
+  pushUndo(JSON.parse(JSON.stringify(DB)));
+  const idx = DB.users.findIndex(u=>u.id===uid);
+  if(idx>=0){ const name = DB.users[idx].name; DB.users.splice(idx,1); saveDB(DB); saveLog({time:now(),action:`Usuário removido: ${name}`}); renderUsersList(); }
+}
+
+/* ============================
+   LOGS + UNDO
+   ============================ */
+function renderLogs(){
+  const logs = JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Logs de Auditoria</h2>
+    <div class="card small">
+      <div style="display:flex;gap:8px;align-items:center"><button onclick="clearLogs()" class="ghost">Limpar Logs</button><button onclick="doUndo()" class="ghost">Desfazer última ação</button></div>
+      <div style="margin-top:8px" id="logsTbl">${logs.map(l=>`<div>${new Date(l.time).toLocaleString()} — ${l.action}</div>`).join('')}</div>
+    </div>
+  `;
+}
+function clearLogs(){ if(confirm('Limpar logs?')){ localStorage.removeItem(LOG_KEY); renderLogs(); } }
+function saveLog(entry){ saveLog(entry) } // wrapper (unused)
+function doUndo(){
+  const snap = popUndo();
+  if(!snap){ alert('Nada para desfazer'); return; }
+  DB = snap.snapshot; saveDB(DB); saveLog({time:now(),action:'Undo realizado'}); renderApp();
+}
+
+/* ============================
+   IMPORT / EXPORT (backup)
+   ============================ */
+function renderImportExport(){
+  contentArea.innerHTML = `
+    <main>
+      <h2>Import / Export</h2>
+      <div class="card">
+        <div class="small">Exportar banco atual (JSON)</div>
+        <div style="margin-top:8px"><button onclick="exportBackup()">Exportar Backup</button></div>
+      </div>
+      <div class="card">
+        <div class="small">Importar backup (sobrescreve DB local)</div>
+        <input type="file" id="fileImport">
+        <div style="margin-top:8px"><button id="btnImport">Importar</button></div>
+      </div>
+      <div style="margin-top:12px"><button onclick="renderLogin()" class="ghost">Voltar</button></div>
+    </main>
+  `;
+  document.getElementById('btnImport').addEventListener('click', ()=> {
+    const f = document.getElementById('fileImport').files[0];
+    if(!f) return alert('Selecione um arquivo JSON'); 
+    const reader = new FileReader(); reader.onload = e=>{
+      try{
+        const data = JSON.parse(e.target.result);
+        if(!confirm('Importar irá sobrescrever o banco local. Continuar?')) return;
+        pushUndo(JSON.parse(JSON.stringify(DB)));
+        DB = data; saveDB(DB); saveLog({time:now(),action:'Backup importado'}); alert('Importado com sucesso'); renderApp();
+      }catch(err){ alert('Arquivo inválido'); }
+    }; reader.readAsText(f);
+  });
+}
+
+/* ============================
+   AUX: seed de exemplo
+   ============================ */
+function seedSampleData(){
+  DB = {
+    users: [
+      {id:uid('u'),name:"Admin",username:"admin",role:"admin",password:"123"},
+      {id:uid('u'),name:"Prof. João",username:"joao",role:"teacher",password:"joao"},
+      {id:uid('u'),name:"Prof. Maria",username:"maria",role:"teacher",password:"maria"}
+    ],
+    turmas: [
+      {id:uid('t'),name:"1º Ano - A",year:2025, teacherId:null, students:[]},
+      {id:uid('t'),name:"2º Ano - B",year:2025, teacherId:null, students:[]},
+      {id:uid('t'),name:"3º Ano - A",year:2025, teacherId:null, students:[]}
+    ],
+    assignments: [],
+    attendance: {},
+    createdAt: now()
+  };
+  // adiciona alunos exemplo
+  DB.turmas[0].students.push({id:uid('s'),name:'Ana Silva', age:8});
+  DB.turmas[0].students.push({id:uid('s'),name:'Bruno Costa', age:9});
+  DB.turmas[1].students.push({id:uid('s'),name:'Carlos Pereira', age:10});
+  DB.turmas[2].students.push({id:uid('s'),name:'Diana Marques', age:11});
+  // add assignment example
+  const a1 = {id:uid('a'), title:'Prova 1', weight:2, turmaId:DB.turmas[0].id, date: new Date().toISOString().slice(0,10), scores: {}};
+  DB.assignments.push(a1);
+  saveDB(DB);
+  saveLog({time:now(),action:'Seed demo carregado'});
+}
+
+/* ============================
+   HELPERS: CSV / TOOLS
+   ============================ */
+function downloadCSV(rows,filename){ const csv = rows.map(r=> r.map(c=> `"${(''+c).replace(/"/g,'""')}"`).join(',')).join('\n'); const blob = new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); }
+function turmasToCSV(){ const arr=[['Turma','Ano','#Alunos']]; DB.turmas.forEach(t=>arr.push([t.name,t.year,(t.students||[]).length])); return arr; }
+
+/* ============================
+   INICIALIZAÇÕES UI
+   ============================ */
+// theme toggle
+function toggleTheme(){ document.body.classList.toggle('dark'); document.getElementById('toggleTheme').textContent = document.body.classList.contains('dark') ? 'Light' : 'Dark'; drawTurmasChart(); }
+// initial render
+document.addEventListener('DOMContentLoaded', ()=> renderApp());
+
+/* ============================
+   EXPORT / SMALL UTIL: exportCSV wrapper
+   ============================ */
+function exportCSV(rows, name){ downloadCSV(rows, name) }
+
+/* ============================
+   PAGINATION / SEARCH / OTHER VIEWS
+   ============================ */
+// Students global listing
+function renderStudents(){
+  const allStudents = DB.turmas.flatMap(t => (t.students||[]).map(s=> ({...s, turmaName: t.name, turmaId: t.id})));
+  contentArea.querySelector('#mainArea').innerHTML = `
+    <h2>Todos os Alunos</h2>
+    <div class="card">
+      <label>Buscar</label>
+      <input id="searchStudents" placeholder="Pesquisar por nome ou turma">
+      <div id="studentList" style="margin-top:8px"></div>
+    </div>
+  `;
+  document.getElementById('searchStudents').addEventListener('input', ()=> listAllStudents(document.getElementById('searchStudents').value));
+  listAllStudents('');
+}
+function listAllStudents(filter){
+  const container = document.getElementById('studentList'); 
+  const rows = DB.turmas.flatMap(t => (t.students||[]).map(s=> ({...s, turmaName: t.name, turmaId: t.id})));
+  const f = (filter||'').toLowerCase();
+  const filtered = rows.filter(r=> !f || r.name.toLowerCase().includes(f) || r.turmaName.toLowerCase().includes(f));
+  if(filtered.length===0){ container.innerHTML = '<div class="small">Nenhum aluno</div>'; return; }
+  let html = `<table><thead><tr><th>Nome</th><th>Idade</th><th>Turma</th><th>Ações</th></tr></thead><tbody>`;
+  html += filtered.map(s=> `<tr><td>${s.name}</td><td>${s.age||'-'}</td><td>${s.turmaName}</td><td><button onclick="viewStudent('${s.turmaId}','${s.id}')">Ver</button></td></tr>`).join('');
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+/* ---------------------------
+  Inicial: se user já logado? (não persistimos)
+--------------------------- */
+</script>
+</body>
+</html>

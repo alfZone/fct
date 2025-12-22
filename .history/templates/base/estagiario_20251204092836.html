@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dados Estagiário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        background: url('/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg') no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Nunito', sans-serif;
+      }
+      .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        position: relative;
+        padding-bottom: 120px; /* espaço para o botão */
+      }
+      h2 {
+        font-weight: 600;
+        font-family: "Playfair Display", serif;
+      }
+      .table th {
+        width: 260px;
+        vertical-align: middle;
+        font-weight: 600;
+      }
+
+      /* --- BOTÃO IGUAL AO DO PRIMEIRO FORMULÁRIO --- */
+      .btn-save {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #28a745;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        font-size: 16px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+      }
+      .btn-save:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+      }
+      .btn-save:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container mt-4 mb-5">
+      <div class="card p-4">
+        <h2 class="mb-4 text-center">Ficha de Identificação do Estagiário</h2>
+
+        <table class="table table-borderless align-middle">
+          <tbody>
+            <tr>
+              <th>Nome</th>
+              <td>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Nome</span>
+                  <input type="text" class="form-control" id="est_nome" placeholder="Ex: João Meixedo">
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>NIF</th>
+              <td>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">NIF</span>
+                  <input type="text" class="form-control" id="est_nif" placeholder="NIF da Empresa">
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>Nº Processo</th>
+              <td>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Nº Processo</span>
+                  <input type="text" class="form-control" id="est_processo" placeholder="Ex: 48543">
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th>ID Ano Letivo</th>
+              <td>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">Ano Letivo</span>
+                  <input type="text" class="form-control" id="est_ano" placeholder="Ex: 2025/26">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- BOTÃO IGUAL AO OUTRO -->
+        <button class="btn-save" onclick="guardarEstagiario()">Guardar</button>
+
+      </div>
+    </div>
+
+    <script>
+      function guardarEstagiario() {
+        const dados = {
+          nome: document.getElementById('est_nome').value,
+          nif: document.getElementById('est_nif').value,
+          processo: document.getElementById('est_processo').value,
+          ano: document.getElementById('est_ano').value
+        };
+
+        fetch('salvar_estagiario.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        })
+        .then(res => res.text())
+        .then(data => alert(data))
+        .catch(err => alert('Erro ao guardar: ' + err));
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

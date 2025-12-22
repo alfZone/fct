@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuir Alunos - Escola Esmonserrate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f5f7fa; }
+        header, footer {
+            background-color: #004080;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+        }
+        header img { height: 60px; margin-bottom: 10px; }
+        main { padding: 30px 20px; max-width: 600px; margin: auto; background: #fff; border-radius: 10px; margin-top: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+        h1 { color: #004080; text-align: center; margin-bottom: 20px; }
+        ul { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
+        li { padding: 10px; border-bottom: 1px solid #ddd; display: flex; align-items: center; }
+        li input { margin-right: 15px; transform: scale(1.2); }
+        button { margin-top: 20px; padding: 12px 25px; font-size: 1rem; background-color: #0073e6; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; width: 100%; }
+        button:hover { background-color: #005bb5; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo-esmonserrate.png" alt="Logo Escola Esmonserrate">
+    <p>Professora: Maria Silva</p>
+    <p>Bem-vindo(a)!</p>
+</header>
+
+<main>
+    <h1>Selecione os Alunos</h1>
+    <form id="formAlunos" action="processarDistribuicao.php" method="post">
+        <ul id="listaAlunos">
+            <!-- Lista de alunos será carregada aqui -->
+        </ul>
+        <button type="submit">Distribuir Selecionados</button>
+    </form>
+</main>
+
+<footer>
+    &copy; 2025 Escola Esmonserrate. Todos os direitos reservados.
+</footer>
+
+<script>
+    fetch('endpoint.php')
+        .then(response => response.json())
+        .then(alunos => {
+            const lista = document.getElementById('listaAlunos');
+            alunos.forEach(aluno => {
+                const li = document.createElement('li');
+                li.innerHTML = `<input type="checkbox" name="alunos[]" value="${aluno.id}"> ${aluno.nome}`;
+                lista.appendChild(li);
+            });
+        })
+        .catch(err => {
+            console.error('Erro ao carregar alunos:', err);
+            document.getElementById('listaAlunos').innerHTML = '<li>Erro ao carregar alunos.</li>';
+        });
+</script>
+
+</body>
+</html>
