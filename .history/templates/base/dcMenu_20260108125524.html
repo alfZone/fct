@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bem-vindo(a)</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #e9f1ff;
+      }
+
+      .background {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+
+      .bg-img {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+        filter: brightness(75%);
+      }
+
+      .header {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .logo {
+        width: 340px;
+      }
+
+      .container {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 40px;
+        width: 700px;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        border-radius: 25px;
+        text-align: center;
+      }
+
+      .container h1 {
+        color: #ffffff;
+        font-size: 38px;
+        margin-bottom: 10px;
+      }
+
+      .container h2 {
+        margin-bottom: 15px;
+        color: #0d57cb;
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      .btn-option {
+        display: block;
+        width: 90%;
+        margin: 22px auto;
+        padding: 18px;
+        font-size: 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+      }
+
+      /* Botão Azul */
+      .btn-blue {
+        background: #0156ff;
+      }
+      .btn-blue:hover {
+        opacity: 0.8;
+      }
+
+      /* Botão Verde */
+      .btn-green {
+        background: #007d3a;
+      }
+      .btn-green:hover {
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <img src="/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg" class="bg-img" />
+    </div>
+
+    <div class="header">
+      <img src="/fct/templates/base/imagens/esm_174.png" class="logo" />
+    </div>
+
+    <div class="container">
+      <h2 class="menu-title">
+        Bem-vindo, <span id="name">NAME</span>
+        <img src="" alt="Foto de Perfil" id="photo" style="width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-left: 10px" />
+      </h2>
+
+      <a class="btn-option btn-blue" href="dc/distribuir"> Distribuir Alunos </a>
+      <a class="btn-option btn-blue" href="dc/contatos-empresas"> Contatos das Empresas </a>
+      <a class="btn-option btn-blue" href="/fct/public/prof/empresa/lista"> Atualizar Dados Empresa </a>
+      <a class="btn-option btn-blue" href="dc/"> Estágios Confirmados </a>
+    </div>
+  </body>
+
+  <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/config.js"></script>
+  <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/loginGoogle.js"></script>
+  <script>
+    lg = new loginGoogle();
+    lg.renderAutenticaWithTypeAdmin();
+  </script>
+</html>
