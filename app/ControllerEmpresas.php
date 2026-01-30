@@ -73,7 +73,7 @@ class ControllerEmpresas
     {
         $p['IdCurso'] = $idCurso;
         $p['NIF'] = $NIF;
-
+        //print_r($p);
         $resp = $this->database->setData("INSERT INTO fctEmpresasCurso (IdCurso, NIF) VALUES (:IdCurso, :NIF)", $p);
         echo json_encode($resp, JSON_UNESCAPED_UNICODE);
     }
@@ -82,18 +82,40 @@ class ControllerEmpresas
     // Criar uma nova Empresa
     public function create()
     {
-        $p['Processo'] = $_POST['Processo'];
-        $p['Nome'] = $_POST['Nome'];
-        $p['Morada'] = $_POST['Morada'];
-        $p['Contacto'] = $_POST['Contacto'];
+        // Obter dados brutos da requisição
+        $rawInput = file_get_contents("php://input");
+
+        // Tent developers<|fim_middle|>
+        $jsonData = json_decode($rawInput, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            // É JSON válido
+            $_POST = $jsonData;
+        } else {
+            // Não é JSON, tentar como form-urlencoded (PUT tradicional)
+            parse_str($rawInput, $_POST);
+        }
+
+        //print_r($_POST);
+
+        $p['NIF'] = $_POST['NIF'];
+        $p['NomeEmpresa']  = $_POST['NomeEmpresa'];
+        $p['Cargo'] = $_POST['Cargo'];
         $p['Email'] = $_POST['Email'];
-        $p['DataNascimento'] = $_POST['DataNascimento'];
-        $p['CC'] = $_POST['CC'];
-        $p['Contribuinte'] = $_POST['Contribuinte'];
-        $p['NomeEE'] = $_POST['NomeEE'];
-        $p['ContactoEE'] = $_POST['ContactoEE'];
-        $p['IDturma'] = $_POST['IDturma'];
-        $resp = $this->database->setData("INSERT INTO fctEmpresas (nome, morada, contacto, 'data', cc) VALUES (:marca, :detalhes, :foto)", $p);
+        $p['Telefone'] = $_POST['Telefone'];
+        $p['ResponsavelEstagiario'] = $_POST['ResponsavelEstagiario'];
+        $p['MoradaSede'] = $_POST['MoradaSede'];
+        $p['HorarioFuncionamento'] = $_POST['HorarioFuncionamento'];
+        $p['HorasDia'] = $_POST['HorasDia'];
+        $p['Monitor'] = $_POST['Monitor'];
+        $p['CargoMonitor'] = $_POST['CargoMonitor'];
+        //$p['Observacoes'] = $_POST['Observacoes'];
+        $p['ContactoEmpresa'] = $_POST['ContactoEmpresa'];
+
+        $resp = $this->database->setData("INSERT INTO fctEmpresas (`NIF`, `NomeEmpresa`, `Cargo`, `ResponsavelEstagiario`, `MoradaSede`, `ContactoEmpresa`, 
+                                            `HorarioFuncionamento`, `HorasDia`, `Monitor`, `CargoMonitor`, `Telefone`, `Observacoes`, `Email`) 
+                                            VALUES (:NIF, :NomeEmpresa, :Cargo, :ResponsavelEstagiario, :MoradaSede, :ContactoEmpresa, 
+                                            :HorarioFuncionamento, :HorasDia, :Monitor, :CargoMonitor, :Telefone, '', :Email)", $p);
         echo json_encode($resp, JSON_UNESCAPED_UNICODE);
     }
 

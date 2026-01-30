@@ -14,7 +14,8 @@ use classes\db\TableBD;
 $table= new TableBD();
 
 //Set the path for the html template
-$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+//$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+$table->setTemplate(_CAMINHO_TEMPLATE . "/tabela.html");
 
 //Set title of the list
 $table->setTitle("Documentos");
@@ -23,10 +24,10 @@ $table->setTitle("Documentos");
 $table->prepareTable("fctDocumentos");
 
 //list of fields for list, new, edit and import records
-$table->setFieldsAtive("Nome, Cabecalho, Rodape",'list');
-$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape", 'new');
-$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape", 'edit');
-$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape", 'csv');
+$table->setFieldsAtive("Nome, Cabecalho, Rodape,valores",'list');
+$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape,valores", 'new');
+$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape,valores", 'edit');
+$table->setFieldsAtive("Nome, Texto, Cabecalho, Rodape,valores", 'csv');
 
 //define field name passw as a password, hidding the file 
 //$table->setFieldPass("passw",0, "md5");

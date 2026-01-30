@@ -1,0 +1,154 @@
+      body {
+          background: url("/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg") no-repeat center center fixed;
+          background-size: cover;
+          font-family: "Nunito", sans-serif;
+      }
+
+      header {
+          padding: 25px;
+          text-align: center;
+      }
+
+      main {
+          max-width: 900px;
+          margin: 30px auto;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 10px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+          
+
+      h1 {
+        text-align: center;
+        color: #004080;
+        margin-bottom: 20px;
+      }
+      
+            
+
+      #logo {
+          height: 120px;
+          filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.25));
+      }
+
+      
+
+      .menu-card {
+          background: rgba(255, 255, 255, 0.22);
+          backdrop-filter: blur(18px);
+          padding: 40px;
+          border-radius: 22px;
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          animation: fadeIn 0.8s ease-out;
+      }
+
+      .portal-card {
+          background: rgba(255, 255, 255, 0.25);
+          backdrop-filter: blur(18px);
+          padding: 45px;
+          border-radius: 22px;
+          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.35);
+          animation: fadeInPage 1.2s ease-out;
+          width: 80%;
+          max-width: 1400px;
+          /* Limite máximo de largura */
+          margin: 0 auto;
+          /* Centraliza */
+      }
+
+      .menu-title {
+          font-weight: 700;
+          font-size: 2.4rem;
+          color: white;
+          text-align: center;
+          text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          margin-bottom: 40px;
+      }
+
+      .menu-btn {
+          background: linear-gradient(45deg, #0066ff, #003d99);
+          border: none;
+          padding: 25px;
+          border-radius: 18px;
+          color: white;
+          text-align: center;
+          transition: 0.3s ease;
+          font-size: 1.2rem;
+          font-weight: 600;
+      }
+
+      .menu-btn:hover {
+          background: linear-gradient(45deg, #1a7dff, #0044aa);
+          transform: translateY(-6px);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      .menu-btn i {
+          font-size: 42px;
+          display: block;
+          margin-bottom: 12px;
+      }
+
+      .menu-btn-info {
+          background: linear-gradient(45deg, #7cf1e2, #19dfdf);
+          border: none;
+          padding: 25px;
+          border-radius: 18px;
+          color: white;
+          text-align: center;
+          transition: 0.3s ease;
+          font-size: 1.2rem;
+          font-weight: 600;
+      }
+
+      .menu-btn-info:hover {
+          background: linear-gradient(45deg, #37f0d7, #037272);
+          transform: translateY(-6px);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      .menu-btn-info i {
+          font-size: 42px;
+          display: block;
+          margin-bottom: 12px;
+      }
+
+      .btn-school {
+          padding: 18px;
+          font-size: 20px;
+          border-radius: 14px;
+          transition: 0.3s ease;
+          font-weight: 600;
+      }
+
+      p {
+          color: #f0f0f0;
+          font-size: 1.1rem;
+      }
+
+      .footer {
+          background: rgba(0, 60, 113, 0.75);
+          backdrop-filter: blur(4px);
+          color: white;
+          text-align: center;
+          padding: 25px;
+          margin-top: 120px;
+          font-size: 1.1rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      @keyframes fadeIn {
+          from {
+              opacity: 0;
+              transform: translateY(18px);
+          }
+
+          to {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }

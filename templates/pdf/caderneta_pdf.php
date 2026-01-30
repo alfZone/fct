@@ -5,7 +5,7 @@ use PhpOffice\PhpWord\IOFactory;
 use Dompdf\Dompdf;
 
 // Caminho correto para vendor (subir 3 níveis até fct/)
-require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Caminho correto do DOCX
 $docxFile = __DIR__ . '/FCT_Caderneta_FCT.Caderneta.016_05.docx';

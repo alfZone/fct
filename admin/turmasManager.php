@@ -14,7 +14,8 @@ use classes\db\TableBD;
 $table= new TableBD();
 
 //Set the path for the html template
-$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+//$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+$table->setTemplate(_CAMINHO_TEMPLATE . "/tabela.html");
 
 //Set title of the list
 $table->setTitle("Turmas");
@@ -23,10 +24,10 @@ $table->setTitle("Turmas");
 $table->prepareTable("fctTurmas");
 
 //list of fields for list, new, edit and import records
-$table->setFieldsAtive("ID, NomeTurma, IDAnoLetivo, IDcurso",'list');
-$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso", 'new');
-$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso", 'edit');
-$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso", 'csv');
+$table->setFieldsAtive("ID, NomeTurma, IDAnoLetivo, IDcurso, processoDC",'list');
+$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso, processoDC", 'new');
+$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso, processoDC", 'edit');
+$table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso, processoDC", 'csv');
 
 //define field name passw as a password, hidding the file 
 //$table->setFieldPass("passw",0, "md5");
@@ -34,6 +35,7 @@ $table->setFieldsAtive("NomeTurma, IDAnoLetivo, IDcurso", 'csv');
 //define lists of values to supplay to a field
 $table->setFieldList("IDAnoLetivo",1,"SELECT `ID`, `Anoletivo` FROM `fctAnosletivos` order by `Anoletivo`;");
 $table->setFieldList("IDcurso",1,"SELECT `ID`, `Nome` FROM `fctCursos` order by `Nome`");
+$table->setFieldList("processoDC", 1, " SELECT `Processo`, `Nome` FROM `fctProfessores` order by `Nome`;");
 //$table->setFieldList("active",2,"1=>Active,0=>Inactive");
 
 //the fiekd to be present as an image

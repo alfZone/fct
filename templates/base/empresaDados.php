@@ -147,29 +147,29 @@ if (!(isset($nif))) {
       <form id="formEmpresa">
         <div class="row g-4">
           <div class="col-12">
-            <label class="form-label">Empresa</label>
-            <input type="text" class="form-control" id="empresa" required>
+            <label class="form-label">Empresa*</label>
+            <input type="text" class="form-control" id="empresa" placeholder="Designação Social da Empresa" required>
           </div>
 
           <div class="col-md-6">
             <label class="form-label">Responsável pelo Estagiário</label>
-            <input type="text" class="form-control" id="resp_nome" placeholder="Primeiro Nome" required>
+            <input type="text" class="form-control" id="resp_nome" placeholder="Nome do responsável" required>
 
           </div>
 
           <div class="col-md-6">
             <label class="form-label">Cargo</label>
-            <input type="text" class="form-control" id="cargo">
+            <input type="text" class="form-control" placeholder="Cargo do responsável" id="cargo">
           </div>
 
           <div class="col-md-12">
             <label class="form-label">Sede / Morada</label>
-            <textarea class="form-control" rows="3" id="sede" name="sede"></textarea>
+            <textarea class="form-control" rows="3" id="sede"  placeholder="Morada completa da empresa" name="sede"></textarea>
           </div>
 
           <div class="col-md-12">
             <label class="form-label">Contato</label>
-            <textarea class="form-control" rows="3" id="contato" name="contato"></textarea>
+            <textarea class="form-control" rows="3" id="contato" placeholder="Pessoas de contacto e contactos" name="contato"></textarea>
           </div>
 
           <div class="col-md-6">
@@ -184,27 +184,27 @@ if (!(isset($nif))) {
 
           <div class="col-6">
             <label class="form-label">Monitor / Orientador</label>
-            <input type="text" class="form-control" id="monitor_nome" placeholder="Primeiro Nome">
+            <input type="text" class="form-control" id="monitor_nome" placeholder="Nome do orentador da empresa">
           </div>
 
           <div class="col-md-6">
             <label class="form-label">Cargo do Monitor</label>
-            <input type="text" class="form-control" id="cargo_monitor">
+            <input type="text" class="form-control" placeholder="Cargo do orientador da empresa" id="cargo_monitor">
           </div>
 
           <div class="col-md-6">
             <label class="form-label">Email</label>
-            <input type="email" class="form-control" id="email">
+            <input type="email" class="form-control" placeholder="email da empresa" id="email">
           </div>
 
           <div class="col-md-6">
             <label class="form-label">Telefone</label>
-            <input type="text" class="form-control" id="telefone">
+            <input type="text" class="form-control" placeholder="telefone ou telemóvel" id="telefone">
           </div>
 
           <div class="col-md-6">
-            <label class="form-label">NIF</label>
-            <input type="text" class="form-control" id="nif" maxlength="9">
+            <label class="form-label">NIF*</label>
+            <input type="text" class="form-control" placeholder="NIF da empresa" id="nif" maxlength="9">
           </div>
 
           <div class="col-md-2">
@@ -221,13 +221,13 @@ if (!(isset($nif))) {
 
           <div class="col-md-12">
             <label class="form-label">Cursos</label>
-            <textarea class="form-control" rows="3" id="cursos" name="cursos" readonly></textarea>
+            <textarea class="form-control" rows="3" id="cursos" name="cursos" placeholder="Preeencher com recurso ao botão Adicionar ao Curso" readonly></textarea>
           </div>
         </div>
 
         <div class="container">
           <div class="row text-end mt-5">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-floating">
                 <select class="form-select" id="SelCurso" name="sellist">
                   <option>1</option>
@@ -237,13 +237,16 @@ if (!(isset($nif))) {
                 </select>
                 <label for="sel1" class="form-label">Escolha o Curso:</label>
               </div>
-              <button type="button" id="btnEnviar" class="btn btn-success btn-save" onclick="addEmpresaCurso()">Adicionar ao Curso</button>
+              <button type="button" id="btnAddCurso" class="btn btn-success btn-save" onclick="addEmpresaCurso()">Adicionar ao Curso</button>
             </div>
-            <div class="col-md-4">
-              <button type="button" id="btnEnviar" class="btn btn-success btn-save" onclick="updateData()">Gravar</button>
+            <div class="col-md-3">
+              <button type="button" id="btnGravar" class="btn btn-success btn-save" onclick="updateData()">Gravar</button>
             </div>
-            <div class="col-md-4">
-              <button type="button" id="btnEnviar" class="btn btn-danger btn-back" onclick="location.href='../empresa/lista'">Fechar</button>
+            <div class="col-md-3">
+              <button type="button" id="btnNovo" class="btn btn-success btn-save" onclick="createData()">Novo</button>
+            </div>
+            <div class="col-md-3">
+              <button type="button" id="btnFechar" class="btn btn-danger btn-back" onclick="location.href='/fct/public/prof/empresa/lista'">Fechar</button>
             </div>
           </div>
         </div>
@@ -262,19 +265,28 @@ if (!(isset($nif))) {
       //alert("aaaa")
       const response = await fetch("https://turma12r.alunos.esmonserrate.org/fct/public/api/empresas/<?= $nif; ?>");
       const lv = await response.json();
-      document.getElementById("nif").value = <?= $nif; ?>;
-      document.getElementById("empresa").value = lv[0].NomeEmpresa;
-      document.getElementById("cargo").value = lv[0].Cargo;
-      document.getElementById("email").value = lv[0].Email;
-      document.getElementById("telefone").value = lv[0].Telefone;
-      document.getElementById("resp_nome").value = lv[0].ResponsavelEstagiario;
-      document.getElementById("sede").value = lv[0].MoradaSede;
-      document.getElementById("horario").value = lv[0].HorarioFuncionamento;
-      document.getElementById("horas").value = lv[0].HorasDia;
-      document.getElementById("monitor_nome").value = lv[0].Monitor;
-      document.getElementById("cargo_monitor").value = lv[0].CargoMonitor;
-      //document.getElementById("obs").value = lv[0].Observacoes;
-      document.getElementById("contato").value = lv[0].ContactoEmpresa;
+      //console.log(lv);
+      if (lv[0].numElements > 0) {
+        document.getElementById("nif").value = <?= $nif; ?>;
+        document.getElementById("empresa").value = lv[0].NomeEmpresa;
+        document.getElementById("cargo").value = lv[0].Cargo;
+        document.getElementById("email").value = lv[0].Email;
+        document.getElementById("telefone").value = lv[0].Telefone;
+        document.getElementById("resp_nome").value = lv[0].ResponsavelEstagiario;
+        document.getElementById("sede").value = lv[0].MoradaSede;
+        document.getElementById("horario").value = lv[0].HorarioFuncionamento;
+        document.getElementById("horas").value = lv[0].HorasDia;
+        document.getElementById("monitor_nome").value = lv[0].Monitor;
+        document.getElementById("cargo_monitor").value = lv[0].CargoMonitor;
+        //document.getElementById("obs").value = lv[0].Observacoes;
+        document.getElementById("contato").value = lv[0].ContactoEmpresa;
+        document.getElementById("btnNovo").disabled = true;
+      }else{
+        document.getElementById("btnGravar").disabled = true;
+        document.getElementById("btnAddCurso").disabled = true;
+         document.getElementById("SelCurso").disabled = true;
+      }
+      
     };
 
     // Atualiza os dados da empresa nos campos do formulário
@@ -421,6 +433,52 @@ if (!(isset($nif))) {
 
         const response = await fetch("https://turma12r.alunos.esmonserrate.org/fct/public/api/empresas/", {
           method: "PUT", // Método HTTP
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer your-token", // if necessary
+          },
+          body: JSON.stringify(dataSend), // Convert data to JSON
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const dadosResposta = await response.json();
+        console.log("Data updated:", dadosResposta);
+      } catch (erro) {
+        console.error("Error updating data:", erro);
+      }
+    };
+
+    const createData = async () => {
+      try {
+        //console.log(ListaCursos);
+        for (const curso of ListaCursos) {
+          await updateVagas(curso);
+        }
+        //await updateVagas()
+        // The data to send
+        const dataSend = {
+          NIF: document.getElementById("nif").value,
+          NomeEmpresa: document.getElementById("empresa").value,
+          Cargo: document.getElementById("cargo").value,
+          Email: document.getElementById("email").value,
+          Telefone: document.getElementById("telefone").value,
+          ResponsavelEstagiario: document.getElementById("resp_nome").value,
+          MoradaSede: document.getElementById("sede").value,
+          HorarioFuncionamento: document.getElementById("horario").value,
+          HorasDia: document.getElementById("horas").value,
+          Monitor: document.getElementById("monitor_nome").value,
+          CargoMonitor: document.getElementById("cargo_monitor").value,
+          //Observacoes: document.getElementById("obs").value,
+          ContactoEmpresa: document.getElementById("contato").value
+        };
+
+        console.log(JSON.stringify(dataSend));
+
+        const response = await fetch("https://turma12r.alunos.esmonserrate.org/fct/public/api/empresas/", {
+          method: "POST", // Método HTTP
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer your-token", // if necessary

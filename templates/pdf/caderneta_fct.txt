@@ -1,13 +1,9 @@
 
-Formação 
-em 
-Contexto de Trabalho
+# Formação em Contexto de Trabalho
 
 
 
-
-
-	Curso Profissional Tecnico de.......................
+## Curso Profissional Tecnico de.......................
 
 
 FORMANDO/A
@@ -57,73 +53,18 @@ TELF. ..........................   TELM.  ............................    EMAIL.
 
 
 
-JUSTIFICAÇÃO DE FALTAS
-Data
-FALTAS (horas)
-OBSERVAÇÕES
+## JUSTIFICAÇÃO DE FALTAS
 
-JUSTIFICADAS
-INJUSTIFICADAS
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
-
-__/___/___
-
-
-
+[TABLE]
+Data | FALTAS (horas) | FALTAS (horas) | OBSERVAÇÕES
+ | JUSTIFICADAS | INJUSTIFICADAS | 
+__/___/___ | | |
+__/___/___ | | |
+__/___/___ | | |
+__/___/___ | | |
+__/___/___ | | |
+__/___/___ | | |
+[/TABLE]
 
 
 1� semana

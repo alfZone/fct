@@ -81,19 +81,70 @@ class ControllerEstagiarios
     {
         $p['curso'] = $curso;
         $estagi = $this->database->getData("SELECT fctEstagiarios.`ID`, fctEstagiarios.`NIF`, fctEmpresas.NomeEmpresa, fctEstagiarios.`Processo`, fctAlunos.Nome, 
-                                                fctAlunos.IDturma, fctTurmas.NomeTurma, fctTurmas.IDcurso, fctEstagiarios.`IDAnoLetivo`, fctAnosletivos.Anoletivo, 
-                                                `ProcessoProf`, fctProfessores.Nome as Professor, fctAnosletivos.Ativo FROM `fctEstagiarios` 
+                                                fctMatricula.idTurma, fctEstagiarios.`IDAnoLetivo`, fctAnosletivos.Anoletivo, fctTurmas.NomeTurma, fctTurmas.IDcurso, 
+                                                `ProcessoProf`, fctProfessores.Nome as Professor, fctAlunos.Contacto, fctAlunos.Morada 
+                                            FROM `fctEstagiarios` 
+                                            INNER JOIN fctAlunos ON fctAlunos.Processo = fctEstagiarios.Processo 
+                                            INNER JOIN fctEmpresas ON fctEmpresas.NIF = fctEstagiarios.NIF 
+                                            INNER JOIN fctProfessores ON fctProfessores.Processo = fctEstagiarios.ProcessoProf 
+                                            INNER JOIN fctAnosletivos ON fctAnosletivos.ID = fctEstagiarios.IDAnoLetivo 
+                                            INNER JOIN fctMatricula ON fctMatricula.processo = fctEstagiarios.Processo
+                                            INNER JOIN fctTurmas ON fctTurmas.ID = fctMatricula.IDturma 
+                                            INNER JOIN fctAnosletivos AS fctAnosletivos_Turmas ON fctAnosletivos_Turmas.ID = fctTurmas.IDAnoLetivo
+                                            WHERE fctAnosletivos.Ativo = 1 
+                                            AND fctAnosletivos_Turmas.Ativo = 1  -- Filtra turmas apenas com anos letivos ativos
+                                            AND fctTurmas.IDcurso = :curso
+                                            ORDER BY fctTurmas.NomeTurma, fctAlunos.Nome;", $p);
+        //print_r($estagi);
+
+        echo json_encode($estagi, JSON_UNESCAPED_UNICODE);
+    }
+
+    // Obter os estagiarios por ano letivo e curso
+    public function getAllporAnoAtivoCursoAluno($curso, $processo)
+    {
+        $p['curso'] = $curso;
+        $p['processo'] = $processo;
+        $estagi = $this->database->getData("SELECT fctEstagiarios.`ID`, fctEstagiarios.`NIF`, fctEmpresas.NomeEmpresa, fctEmpresas.MoradaSede, fctEmpresas.Email as EmailEmpresa, 
+                                                fctEmpresas.Telefone as TelefoneEmpresa, fctEmpresas.Monitor, fctEstagiarios.`Processo` as ProcessoEstagiario, fctAlunos.Nome as NomeAluno, fctAlunos.Contacto as ContactoAluno,  
+                                                fctAlunos.Email as EmailAluno, fctMatricula.idTurma, fctEstagiarios.`IDAnoLetivo`, fctAnosletivos.Anoletivo, fctTurmas.NomeTurma, fctTurmas.IDcurso,
+                                                `ProcessoProf`, fctProfessores.Nome as Professor, fctAlunos.Contacto, fctAlunos.Morada as MoradaAluno, fctCursos.Nome as NomeCurso, 
+                                                dc.Processo, dc.Nome as NomeDC, dc.Email as EmailDC, dc.Telefone as TelefoneDC FROM `fctEstagiarios` 
                                                 inner join fctAlunos on fctAlunos.Processo=fctEstagiarios.Processo 
-                                                inner join fctEmpresas on fctEmpresas.NIF=fctEstagiarios.NIF 
+                                              	inner join fctEmpresas on fctEmpresas.NIF=fctEstagiarios.NIF 
                                                 inner join fctProfessores on fctProfessores.Processo=fctEstagiarios.ProcessoProf 
                                                 inner join fctAnosletivos on fctAnosletivos.ID=fctEstagiarios.IDAnoLetivo 
-                                                INNER JOIN fctTurmas on fctTurmas.ID=fctAlunos.IDturma
-                                                WHERE fctAnosletivos.Ativo=1 and fctTurmas.IDcurso = :curso
+                                                INNER join fctMatricula on fctMatricula.processo=fctEstagiarios.Processo
+                                                INNER JOIN fctTurmas on fctTurmas.ID=fctMatricula.IDturma
+                                                inner join fctCursos on fctCursos.ID=fctTurmas.IDcurso 
+                                                inner join fctProfessores as dc on dc.Processo=fctTurmas.processoDC 
+                                                where fctAnosletivos.Ativo=1 and fctTurmas.IDcurso = :curso and fctEstagiarios.Processo = :processo
                                                 order by fctTurmas.NomeTurma, fctAlunos.Nome ;", $p);
         //print_r($estagi);
 
         echo json_encode($estagi, JSON_UNESCAPED_UNICODE);
     }
+
+    // Obter os estagiarios por ano letivo e curso
+    public function inscreverMatriculadosParaEstagio()
+    {
+
+        $estagi = $this->database->getData("INSERT IGNORE INTO `fctEstagiarios` (`NIF`, `Processo`, `IDAnoLetivo`, `ProcessoProf`)
+                                            SELECT 
+                                                '1',   -- NIF vazio ou valor padrão
+                                                fctMatricula.`processo`,
+                                                fctTurmas.IDAnoLetivo,
+                                                '1'    -- ProcessoProf vazio ou valor padrão
+                                            FROM `fctMatricula` 
+                                            INNER JOIN fctTurmas ON fctTurmas.ID = fctMatricula.idTurma 
+                                            INNER JOIN fctAnosletivos ON fctAnosletivos.ID = fctTurmas.IDAnoLetivo 
+                                            WHERE fctAnosletivos.Ativo = 1;");
+        //print_r($estagi);
+
+        echo json_encode($estagi, JSON_UNESCAPED_UNICODE);
+    }
+
+
 
     // Obter os estagiarios por ano letivo e curso
     public function getAllporAnoAtivoProfessor($prof)
@@ -215,6 +266,8 @@ class ControllerEstagiarios
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 
+   
+
 
     // Criar um novo estagiario
     public function create()
@@ -266,15 +319,27 @@ class ControllerEstagiarios
 
 
     // Atualizar um estagiario
-    public function update()
+    public function updateDistribuir()
     {
-        parse_str(file_get_contents("php://input"), $putData);
-        $p['marca'] = $putData['Marca'];
-        $p['detalhes'] = $putData['Detalhes'];
-        $p['foto'] = $putData['Foto'];
-        $p['id'] = $putData['id'];
+        // Obter dados brutos da requisição
+        $rawInput = file_get_contents("php://input");
+        //print_r($rawInput);
+        // Tent developers<|fim_middle|>
+        $jsonData = json_decode($rawInput, true);
+        //print_r($jsonData);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            // É JSON válido
+            $putData = $jsonData;
+        } else {
+            // Não é JSON, tentar como form-urlencoded (PUT tradicional)
+            parse_str($rawInput, $putData);
+        }
 
-        $resp = $this->database->setData("UPDATE fctEstagiarios SET marca = :marca, detalhes = :detalhes, foto = :foto WHERE id = :id", $p);
+        $p['ProcessoProf'] = $putData['ProcessoProf'];
+        $p['NIF'] = $putData['NIF'];
+        $p['id'] = $putData['ID'];
+
+        $resp = $this->database->setData("UPDATE fctEstagiarios SET ProcessoProf = :ProcessoProf, NIF = :NIF WHERE ID = :id", $p);
         echo json_encode($resp, JSON_UNESCAPED_UNICODE);
     }
 

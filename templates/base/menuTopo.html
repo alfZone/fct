@@ -1,0 +1,71 @@
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+        <img src="/fct/templates/base/imagens/esm_174.png" alt="Logo ESM" style="width:70px;" class="rounded-pill"> 
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/fct/public/prof/" role="button" data-bs-toggle="dropdown">Professor</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/fct/public/prof/dados">Atualizar o meu perfil</a></li>
+            <li><a class="dropdown-item" href="/fct/public/prof/cursos/" id="meusCursos">Os meus cursos</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/prof/empresa/lista">Atualizar dados das empresas</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/prof/estagiarios/lista">Os meus estágios</a></li>
+            <li><a class="dropdown-item" href="/fct/public/prof/estagiarios">Todos os estágios</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/prof">Menu professor</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Diretor de Curso</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/fct/public/dc/distribuir">Distribuir Alunos</a></li>
+            <li><a class="dropdown-item" href="/fct/public/dc/documentos">Documentos</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/dc/contatos-empresas">Contatos das Empresas</a></li>
+            <li><a class="dropdown-item" href="/fct/public/prof/empresa/lista">Atualizar Dados Empresa</a></li>
+            <li><a class="dropdown-item" href="/fct/public/dc/vagas">Estágios Confirmados</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/dc">Menu diretor do curso</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Administração</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/fct/public/admin/alunos">Alunos</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/matriculas" >Matriculas</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/estagiarios" >Estagiários</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/anos-letivos">Ano letivo</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/documentos">Documentos</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/empresas">Empresas</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/empresas-curso">Empresas dos Cursos</a></li>
+             <li><a class="dropdown-item" href="/fct/public/admin/empresas-vagas">Vagas nas Empresas</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/professores">Professores</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/professores-cursos">Cursos dos Professores</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/turmas">Turmas</a></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/cursos">Cursos</a></li>
+            <li><hr></li>
+            <li><a class="dropdown-item" href="/fct/public/admin/in">Menu administrador</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <div class="navbar-text text-white me-3" id="name">
+          Utilizador
+        </div>
+        <img src="/fct/images/user.png" alt="user" style="width:40px;" class="rounded-pill" id="photo"> 
+        <button class="btn btn-primary" type="button" onclick="lg.logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+</nav>

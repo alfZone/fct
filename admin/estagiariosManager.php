@@ -14,7 +14,8 @@ use classes\db\TableBD;
 $table = new TableBD();
 
 //Set the path for the html template
-$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+//$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+$table->setTemplate(_CAMINHO_TEMPLATE . "/tabela.html");
 
 //Set title of the list
 $table->setTitle("Estagiários");
@@ -23,7 +24,7 @@ $table->setTitle("Estagiários");
 $table->prepareTable("fctEstagiarios");
 
 //list of fields for list, new, edit and import records
-$table->setFieldsAtive("ID, NIF, Processo, IDAnoLetivo, ProcessoProf", 'list');
+$table->setFieldsAtive("ID, NIF, Processo, IDAnoLetivo, ProcessoProf, Morada", 'list');
 $table->setFieldsAtive("NIF, Processo, IDAnoLetivo, ProcessoProf", 'new');
 $table->setFieldsAtive("NIF, Processo, IDAnoLetivo, ProcessoProf", 'edit');
 $table->setFieldsAtive("NIF, Processo, IDAnoLetivo, ProcessoProf", 'csv');
@@ -36,6 +37,8 @@ $table->setFieldList("Processo", 3, " SELECT `Processo`, `Nome` FROM `fctAlunos`
 $table->setFieldList("IDAnoLetivo", 1, " SELECT `ID`, `Anoletivo` FROM `fctAnosletivos` order by `Anoletivo`;");
 $table->setFieldList("NIF", 3, " SELECT `NIF`, `NomeEmpresa` FROM `fctEmpresas` order by `NomeEmpresa`;|0=>Não definido");
 $table->setFieldList("ProcessoProf", 3, " SELECT `Processo`, `Nome` FROM `fctProfessores` order by `Nome`;|0=>Não definido");
+//$table->setFieldList("Morada1", 3, " SELECT `Processo`, `Morada` FROM `fctAlunos` order by `Nome`;|0=>Não definido");
+$table->setFieldList("Morada", 2, " SELECT `Processo`, `Nome` FROM `fctAlunos` order by `Nome`;");
 //$table->setFieldList("active",2,"1=>Active,0=>Inactive");
 
 //the fiekd to be present as an image
@@ -58,7 +61,9 @@ $table->setMultiple(true);
 //$table->setDefaultValue('fielName',$value);
 
 //Active debug mode
-//$table->setDebugShow(true); 
+//$table->setDebugShow(true);
+
+$table->setCalculatedField("Morada"," Processo");
 
 //Do what is necessary to maintain the table in an html page. Lists the data and allows you to insert new ones, edit and delete records. Use a 'do' parameter to make decisions
 $table->showHTML();

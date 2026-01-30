@@ -42,6 +42,7 @@
         color: #333;
       }
 
+      input[type="text"],
       input[type="email"],
       input[type="password"] {
         width: 90%;
@@ -116,12 +117,12 @@
     <div class="login-container">
       <h2>Iniciar Sessão</h2>
 
-      <form>
-        <label>Email</label>
-        <input type="email" placeholder="O seu email" required />
+      <form action="/fct/public/autenticacao/validacao-login-simple" method="post">
+        <label>Utilizador</label>
+        <input type="text" name="user" placeholder="O seu nome de utilizador" required />
 
         <label>Password</label>
-        <input type="password" placeholder="A sua password" required />
+        <input type="password" name="passw" placeholder="A sua password" required />
 
         <button type="submit">Entrar</button>
 
@@ -131,10 +132,11 @@
           Iniciar com Gmail
         </button> -->
 
-        <div id="g_id_onload" data-client_id="436091069232-vapg0eikmfla1m7htdafk5i8eb3ic4u5.apps.googleusercontent.com" data-login_uri="/fct/public/autenticacao/validacaoLogin" data-auto_prompt="false"></div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        
       </form>
-
+      <h2>Entrar com a Google</h2>
+      <div id="g_id_onload" data-client_id="436091069232-vapg0eikmfla1m7htdafk5i8eb3ic4u5.apps.googleusercontent.com" data-login_uri="/fct/public/autenticacao/validacaoLogin" data-auto_prompt="false"></div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
       <div class="links">
         <a href="#">Esqueci-me da password</a>
         <a href="#">Não tenho uma password</a>

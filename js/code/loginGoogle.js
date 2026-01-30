@@ -41,6 +41,22 @@ class loginGoogle {
   }
 
   //render the authenticated user information
+  async renderAutenticaURLS() {
+    //console.log("ver");
+    const response = await fetch(this.c.urlRenderAutentication);
+    const lv = await response.json();
+    for (const v of lv) {
+      if (v.user !== null) {
+        document.getElementById("photo").setAttribute("src", v.foto);
+        document.getElementById("name").innerHTML = v.nome;
+        document.getElementById("meusCursos").href = "/fct/public/prof/cursos/" + v.user;
+      } else {
+        window.location.href = this.c.urlLogin;
+      }
+    }
+  }
+
+  //render the authenticated user information
   async renderAutenticaWithTypeAdmin() {
     //console.log("ver");
     const response = await fetch(this.c.urlRenderAutentication);
@@ -50,7 +66,7 @@ class loginGoogle {
         document.getElementById("photo").setAttribute("src", v.foto);
         document.getElementById("name").innerHTML = v.nome;
         //console.log(v.level);
-        if (v.level < 9999) {
+        if (v.level < 999) {
           //hide admin menu
           document.getElementById("menu-admin").style.display = "none";
         }

@@ -14,7 +14,8 @@ use classes\db\TableBD;
 $table = new TableBD();
 
 //Set the path for the html template
-$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+//$table->setTemplate(_CAMINHO_CLASSES . "/db/TableBD.html");
+$table->setTemplate(_CAMINHO_TEMPLATE . "/tabela.html");
 
 //Set title of the list
 $table->setTitle("Empresas do Curso");
@@ -24,12 +25,12 @@ $table->prepareTable("fctEmpresasCurso");
 
 //list of fields for list, new, edit and import records
 $table->setFieldsAtive("id, IdCurso,NIF", 'list');
-$table->setFieldsAtive("IdCurso,NIF", 'new');
-$table->setFieldsAtive("IdCurso,NIF", 'edit');
-$table->setFieldsAtive("IdCurso,NIF", 'csv');
+$table->setFieldsAtive("IdCurso,NIF,passw", 'new');
+$table->setFieldsAtive("IdCurso,NIF,passw", 'edit');
+$table->setFieldsAtive("IdCurso,NIF,passw", 'csv');
 
 //define field name passw as a password, hidding the file 
-//$table->setFieldPass("passw",0, "md5");
+$table->setFieldPass("passw", 0, "md5");
 
 //define lists of values to supplay to a field
 $table->setFieldList("NIF", 1, " SELECT `NIF`, `NomeEmpresa` FROM `fctEmpresas` order by `NomeEmpresa`;");

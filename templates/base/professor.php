@@ -18,130 +18,16 @@ $processo = $_SESSION['user'];
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/fct/templates/base/css/estilos.css" />
 
-  <style>
-    /* Fade-in up */
-    @keyframes fadeUp {
-      0% {
-        opacity: 0;
-        transform: translateY(40px);
-      }
 
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Botão ao enviar */
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.08);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    body {
-      min-height: 100vh;
-      background-image: url("/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      position: relative;
-      animation: fadeUp 1.2s ease-out;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.25);
-      z-index: -1;
-    }
-
-    .top-bar {
-      background: none;
-      padding: 10px 0;
-      text-align: center;
-      animation: fadeUp 1s ease-out;
-    }
-
-    .top-bar img {
-      height: 110px;
-    }
-
-    .form-box {
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-      padding: 40px;
-      max-width: 600px;
-      animation: fadeUp 1.4s ease-out;
-      backdrop-filter: blur(3px);
-    }
-
-    label {
-      font-weight: 600;
-    }
-
-    .btn {
-      padding: 16px 32px !important;
-      font-size: 1.2rem !important;
-      border-radius: 12px !important;
-      transition: 0.3s;
-    }
-
-    .footer {
-      background: rgba(0, 60, 113, 0.75);
-      backdrop-filter: blur(4px);
-      color: white;
-      text-align: center;
-      padding: 25px;
-      margin-top: 120px;
-      font-size: 1.1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.25);
-    }
-
-    /* Mensagem de enviado */
-    .alert-custom {
-      background: rgba(40, 120, 40, 0.9);
-      color: white;
-      padding: 18px;
-      border-radius: 12px;
-      text-align: center;
-      margin-top: 15px;
-      animation: fadeUp 0.7s ease-out;
-    }
-
-    .alert-error {
-      background: rgba(150, 0, 0, 0.85);
-      color: white;
-      padding: 18px;
-      border-radius: 12px;
-      text-align: center;
-      margin-top: 15px;
-      animation: fadeUp 0.7s ease-out;
-    }
-  </style>
 </head>
 
 <body>
-  <div class="top-bar">
-    <img src="/fct/templates/base/imagens/esm_174.png" alt="Logo Escola" />
-  </div>
-
+  <div menu="/fct/templates/base/menuTopo.html"></div>
+  <header></header>
   <div class="container mt-5 mb-5 d-flex justify-content-center">
-    <div class="form-box">
+    <div class="menu-card mx-auto col-lg-5 col-md-5">
       <div id="mensagem"></div>
 
       <form>
@@ -168,10 +54,10 @@ $processo = $_SESSION['user'];
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              <button type="button" id="btnEnviar" class="btn btn-success" onclick="atualizarDados()">Gravar</button>
+              <button type="button" id="btnEnviar" class="btn btn-success btn-school" onclick="atualizarDados()">Gravar</button>
             </div>
             <div class="col-md-6">
-              <button type="button" id="btnEnviar" class="btn btn-danger" onclick="location.href='../prof'">Fechar</button>
+              <button type="button" id="btnEnviar" class="btn btn-danger btn-school" onclick="location.href='../prof'">Fechar</button>
             </div>
           </div>
         </div>
@@ -180,6 +66,20 @@ $processo = $_SESSION['user'];
   </div>
 
   <div class="footer">© 2025 Escola Esmonserrate. Todos os direitos reservados.</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/config.js"></script>
+    <script src="https://turma12r.alunos.esmonserrate.org/fct/js/code/loginGoogle.js"></script>
+    <script src="/fct/js/code/html.js"></script>
+    <script>
+      lg = new loginGoogle();
+      lg.renderAutenticaURLS();
+    </script>
+    <script>
+  //includeHTML("head");
+  includeHTML("menu");
+</script>
 
   <script>
     const atualizarProfessor = async () => {

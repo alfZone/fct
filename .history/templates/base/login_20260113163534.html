@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página de Login</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        height: 100vh;
+
+        /* Imagem de fundo */
+        background: url("/fct/templates/base/imagens/Jose_Campos_to_Joao_Franco-11.jpg") no-repeat center center fixed;
+        background-size: cover;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      /* LOGO */
+      .logo {
+        width: 260px;
+        margin-bottom: 20px;
+        mix-blend-mode: multiply; /* remove visualmente o fundo branco */
+      }
+
+      .login-container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        width: 320px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 90%;
+        padding: 12px;
+        margin: 8px auto 15px;
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #4a90e2;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #3b7ac3;
+      }
+
+      /* Botão Gmail */
+      .gmail-btn {
+        width: 100%;
+        padding: 12px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        color: #444;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+      }
+
+      .gmail-btn:hover {
+        background: #f2f2f2;
+      }
+
+      .links {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+
+      .links a {
+        display: block;
+        margin-top: 5px;
+        color: #4a90e2;
+        text-decoration: none;
+      }
+
+      .links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <!-- LOGOTIPO -->
+    <img src="/fct/templates/base/imagens/esm_174.png" class="logo" alt="Logo Monserrate" />
+
+    <div class="login-container">
+      <h2>Iniciar Sessão</h2>
+
+      <form action="/fct/public/autenticacao/validacaoLogin" method="post">
+        <label>Utilizador</label>
+        <input type="text" id="user" placeholder="O seu nome de utilizador" required />
+
+        <label>Password</label>
+        <input type="password" id="passw" placeholder="A sua password" required />
+
+        <button type="submit">Entrar</button>
+
+        <!-- Botão Gmail -->
+        <!-- <button type="button" class="gmail-btn">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Gmail" style="width: 18px; margin-right: 8px" />
+          Iniciar com Gmail
+        </button> -->
+
+        <div id="g_id_onload" data-client_id="436091069232-vapg0eikmfla1m7htdafk5i8eb3ic4u5.apps.googleusercontent.com" data-login_uri="/fct/public/autenticacao/validacaoLogin" data-auto_prompt="false"></div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+      </form>
+
+      <div class="links">
+        <a href="#">Esqueci-me da password</a>
+        <a href="#">Não tenho uma password</a>
+      </div>
+    </div>
+  </body>
+</html>

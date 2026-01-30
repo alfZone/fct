@@ -21,7 +21,7 @@ Route::get('/admin/in', function () {
   require _CAMINHO_TEMPLATE . "menu-admin.html";
 });
 
-//Pdfs
+//########################################## Pdfs ##########################
 Route::get('/pdf/modelofeito', function () {
   require _CAMINHO_PDF . "/caderneta_pdf.php";
 });
@@ -29,6 +29,9 @@ Route::get('/pdf/tabela', function () {
   require _CAMINHO_PDF . "/tabela.php";
 });
 Route::get('/pdf/cadernetav1', function () {
+  require _CAMINHO_PDF . "/cadernetav1.php";
+});
+Route::post('/pdf/cadernetav1', function () {
   require _CAMINHO_PDF . "/cadernetav1.php";
 });
 Route::get('/pdf/modelo', function () {
@@ -42,6 +45,10 @@ Route::get('/pdf/modelo-a4-deitada', function () {
 });
 Route::get('/pdf/caderneta', function () {
   require _CAMINHO_TEMPLATE . "/pdf/caderneta_pdf.php";
+});
+
+Route::get('/pdf/exemplo', function () {
+  require _CAMINHO_CLASSES . "/dompdf/exemplo.php";
 });
 
 
@@ -88,13 +95,36 @@ Route::get('/prof/empresa/lista', function () {
 Route::get('/prof/empresa/{nif}', function ($nif) {
   require _CAMINHO_TEMPLATE . "empresaDados.php";
 });
+
+Route::get('/prof/cursos/{prof}', function ($prof) {
+  require _CAMINHO_ADM . "professoresCursosManager.php";
+});
+Route::post('/prof/cursos/{prof}', function ($prof) {
+  require _CAMINHO_ADM . "professoresCursosManager.php";
+});
+
+
+Route::get('/prof/alunos/{processo}', function ($processo) {
+  require _CAMINHO_ADM . "alunosManager.php";
+});
+Route::post('/prof/alunos/{processo}', function ($processo) {
+  require _CAMINHO_ADM . "alunosManager.php";
+});
+
+//estagiarios
+Route::get('/prof/estagiarios/lista', function () {
+  require _CAMINHO_TEMPLATE . "estagiarioLista.php";
+});
+
+Route::get('/prof/estagiarios', function () {
+  require _CAMINHO_TEMPLATE . "estagiarioVerLista.php";
+});
+
 Route::get('/prof/{id}', function () {
   require _CAMINHO_TEMPLATE . "professorMenu.html";
 });
 
-Route::get('/prof/estagiarios/lista', function () {
-  require _CAMINHO_TEMPLATE . "estagiarioLista.php";
-});
+
 //################################################
 
 //################ empresas ######################
@@ -117,6 +147,9 @@ Route::get('/dc/distribuir', function () {
 });
 Route::get('/dc/contatos-empresas', function () {
   require _CAMINHO_TEMPLATE . "dcContatosEmpresas.html";
+});
+Route::get('/dc/documentos', function () {
+  require _CAMINHO_TEMPLATE . "dcDocumentos.html";
 });
 Route::get('/dc/vagas', function () {
   require _CAMINHO_TEMPLATE . "dcVagasDisponiveis.html";
@@ -200,11 +233,24 @@ Route::get('/admin/professores', function () {
 Route::post('/admin/professores', function () {
   require _CAMINHO_ADM . "professoresManager.php";
 });
+Route::get('/admin/professores-cursos', function () {
+  require _CAMINHO_ADM . "professoresCursosManager.php";
+});
+Route::post('/admin/professores-cursos', function () {
+  require _CAMINHO_ADM . "professoresCursosManager.php";
+});
+
 Route::get('/admin/estagiarios', function () {
   require _CAMINHO_ADM . "estagiariosManager.php";
 });
 Route::post('/admin/estagiarios', function () {
   require _CAMINHO_ADM . "estagiariosManager.php";
+});
+Route::get('/admin/matriculas', function () {
+  require _CAMINHO_ADM . "matriculasManager.php";
+});
+Route::post('/admin/matriculas', function () {
+  require _CAMINHO_ADM . "matriculasManager.php";
 });
 
 
@@ -258,28 +304,34 @@ Route::delete(['set' => '/api/empresas/{id}', 'as' => 'empresas.delete'], 'Contr
 //api professores
 Route::get(['set' => '/api/professores', 'as' => 'professores.getAll'], 'ControllerProfessores@getAll');
 Route::get(['set' => '/api/professores/{id}', 'as' => 'professores.getById'], 'ControllerProfessores@getById');
+Route::get(['set' => '/api/professores/curso/{curso}', 'as' => 'professores.getProfsPorCurso'], 'ControllerProfessores@getProfsPorCurso');
 Route::post(['set' => '/api/professores', 'as' => 'professores.create'], 'ControllerProfessores@create');
 Route::put(['set' => '/api/professores', 'as' => 'professores.update'], 'ControllerProfessores@update');
 Route::delete(['set' => '/api/professores/{id}', 'as' => 'professores.delete'], 'ControllerProfessores@delete');
 
 //api estagiarios
 Route::get(['set' => '/api/estagiarios', 'as' => 'estagiarios.getAll'], 'ControllerEstagiarios@getAll');
+Route::put(['set' => '/api/estagiarios', 'as' => 'estagiarios.updateDistribuir'], 'ControllerEstagiarios@updateDistribuir');
 Route::get(['set' => '/api/estagiarios/ano/{ano}', 'as' => 'estagiarios.getAllporAno'], 'ControllerEstagiarios@getAllporAno');
 Route::get(['set' => '/api/estagiarios/criar-ano-ativo/{curso}', 'as' => 'estagiarios.createEstagiariosAnoCurso'], 'ControllerEstagiarios@createEstagiariosAnoCurso');
 Route::get(['set' => '/api/estagiarios/vagas/todos-cursos/{nif}', 'as' => 'estagiarios.getAllVagasNifAnoAtivo'], 'ControllerEstagiarios@getAllVagasNifAnoAtivo');
 Route::get(['set' => '/api/estagiarios/vagas/{curso}', 'as' => 'estagiarios.getAllVagasCursoAnoAtivo'], 'ControllerEstagiarios@getAllVagasCursoAnoAtivo');
 Route::get(['set' => '/api/estagiarios/vagas/{curso}/{nif}', 'as' => 'estagiarios.getAllVagasCursoNifAnoAtivo'], 'ControllerEstagiarios@getAllVagasCursoNifAnoAtivo');
 Route::get(['set' => '/api/estagiarios/ano-letivo-ativo/{curso}', 'as' => 'estagiarios.getAllporAnoAtivoCurso'], 'ControllerEstagiarios@getAllporAnoAtivoCurso');
+Route::get(['set' => '/api/estagiarios/ano-letivo-ativo/{curso}/{processo}', 'as' => 'estagiarios.getAllporAnoAtivoCursoAluno'], 'ControllerEstagiarios@getAllporAnoAtivoCursoAluno');
 Route::get(['set' => '/api/estagiarios/ano-letivo-ativo-professor/{prof}', 'as' => 'estagiarios.getAllporAnoAtivoProfessor'], 'ControllerEstagiarios@getAllporAnoAtivoProfessor');
 Route::get(['set' => '/api/estagiarios/ano-curso/{ano}/{curso}', 'as' => 'estagiarios.getAllporAnoCurso'], 'ControllerEstagiarios@getAllporAnoCurso');
+Route::post(['set' => '/api/estagiarios/add-matriculas', 'as' => 'estagiarios.inscreverMatriculadosParaEstagio'], 'ControllerEstagiarios@inscreverMatriculadosParaEstagio');
 
 Route::get(['set' => '/api/estagiarios/{id}', 'as' => 'estagiarios.getById'], 'ControllerEstagiarios@getById');
 Route::post(['set' => '/api/estagiarios', 'as' => 'estagiarios.create'], 'ControllerEstagiarios@create');
-Route::put(['set' => '/api/estagiarios', 'as' => 'estagiarios.update'], 'ControllerEstagiarios@update');
+//Route::put(['set' => '/api/estagiarios', 'as' => 'estagiarios.update'], 'ControllerEstagiarios@update');
 Route::put(['set' => '/api/estagiarios/vagas', 'as' => 'estagiarios.atualizarVagasObs'], 'ControllerEstagiarios@atualizarVagasObs');
 Route::delete(['set' => '/api/estagiarios/{id}', 'as' => 'estagiarios.delete'], 'ControllerEstagiarios@delete');
 
-
+//api documentos
+Route::get(['set' => '/api/documentos', 'as' => 'documentos.getAll'], 'ControllerDocs@getAll');
+Route::get(['set' => '/api/documentos/{id}', 'as' => 'documentos.getById'], 'ControllerDocs@getById');
 
 //api general
 
@@ -303,8 +355,11 @@ Route::get(['set' => '/users/lista', 'as' => 'users.listOfUsers'], 'ControllerUs
 Route::get(['set' => '/autenticacao/logout', 'as' => 'loginGoogle.logout'], 'ControllerLoginGoogle@logout');
 Route::get(['set' => '/autenticacao/getAutentication', 'as' => 'LoginGoogle.getAutentication'], 'ControllerLoginGoogle@getAutentication');
 
-Route::get(['set' => '/autenticacao/validacaoLogin', 'as' => 'LoginGoogle.logout'], 'ControllerLoginGoogle@validaLogin');
-Route::post(['set' => '/autenticacao/validacaoLogin', 'as' => 'LoginGoogle.logout'], 'ControllerLoginGoogle@validaLogin');
+Route::get(['set' => '/autenticacao/validacaoLogin', 'as' => 'LoginGoogle.validaLogin'], 'ControllerLoginGoogle@validaLogin');
+Route::post(['set' => '/autenticacao/validacaoLogin', 'as' => 'LoginGoogle.validaLogin'], 'ControllerLoginGoogle@validaLogin');
+
+Route::get(['set' => '/autenticacao/validacao-login-simple', 'as' => 'LoginGoogle.validaLogin'], 'ControllerLoginSimples@validaLogin');
+Route::post(['set' => '/autenticacao/validacao-login-simple', 'as' => 'LoginGoogle.validaLogin'], 'ControllerLoginSimples@validaLogin');
 
 //Autenticação
 $aut = new Authentication();

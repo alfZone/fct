@@ -46,6 +46,21 @@ class ControllerProfessores
         }
     }
 
+    // Obter professores por Processo
+    public function getProfsPorCurso($curso)
+    {
+        $p['idCurso'] = $curso;
+        $professores = $this->database->getData("SELECT fctProfessoresCurso.`processo`, fctProfessores.Nome, fctProfessoresCurso.`idCurso`, fctProfessoresCurso.`ativo` 
+                                                    FROM `fctProfessoresCurso` inner join fctProfessores on fctProfessores.Processo=fctProfessoresCurso.processo 
+                                                    WHERE fctProfessoresCurso.ativo=1 AND fctProfessoresCurso.idCurso=:idCurso", $p);
+        //print_r($professores);
+        if ($professores) {
+            echo json_encode($professores, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['msg' => 'Professor não encontrado', 'status' => '404']);
+        }
+    }
+
     // Criar um novo Professor
     public function create()
     {
